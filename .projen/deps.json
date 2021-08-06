@@ -19,7 +19,11 @@
     },
     {
       "name": "aws-cdk",
-      "version": "^1.95.2",
+      "version": "^1.117.0",
+      "type": "build"
+    },
+    {
+      "name": "cdk-assume-role-credential-plugin",
       "type": "build"
     },
     {
@@ -52,8 +56,18 @@
       "type": "build"
     },
     {
+      "name": "npm-check-updates",
+      "version": "^11",
+      "type": "build"
+    },
+    {
+      "name": "npm-check-updates",
+      "version": "^11",
+      "type": "build"
+    },
+    {
       "name": "projen",
-      "version": "^0.17.84",
+      "version": "^0.17.95",
       "type": "build"
     },
     {
@@ -75,12 +89,75 @@
     },
     {
       "name": "@aws-cdk/assert",
-      "version": "^1.95.2",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-codebuild",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-codecommit",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-codedeploy",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-codepipeline-actions",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-codepipeline",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-iam",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-lambda",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-s3",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/cloudformation-include",
+      "version": "^1.117.0",
       "type": "runtime"
     },
     {
       "name": "@aws-cdk/core",
-      "version": "^1.95.2",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/core",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/pipelines",
+      "version": "^1.117.0",
+      "type": "runtime"
+    },
+    {
+      "name": "chalk",
+      "type": "runtime"
+    },
+    {
+      "name": "path",
       "type": "runtime"
     }
   ],
