@@ -5,7 +5,7 @@ export const envVars = {
   PROJECT_NAME: 'skcnc',
   GIT_PROVIDER: 'github',
   INFRA: {
-    REPO_NAME: process.env.REPO_NAME || 'cdk-landingzone-pipelines',
+    REPO_NAME: process.env.REPO_NAME || 'cdk-landingzone-pipeline',
     REPO_OWNER: process.env.REPO_OWNER || 'jingood2',
     BUILD_BRANCH: process.env.BUILD_BRANCH || 'main',
     //GITHUB_TOKEN: 'devrock/github/token',
