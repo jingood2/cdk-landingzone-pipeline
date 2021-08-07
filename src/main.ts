@@ -11,7 +11,7 @@ export class MyStack extends Stack {
 }
 
 // for development, use account/region from cdk cli
-const devEnv = {
+export const devEnv = {
   account: '037729278610',
   //region: process.env.CDK_DEFAULT_REGION,
   region: 'ap-northeast-2',

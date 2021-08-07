@@ -3,7 +3,9 @@ import * as codepipeline from '@aws-cdk/aws-codepipeline';
 import * as codepipeline_actions from '@aws-cdk/aws-codepipeline-actions';
 import * as cdk from '@aws-cdk/core';
 import * as pipelines from '@aws-cdk/pipelines';
+import { devEnv } from '../main';
 import { envVars } from './config';
+import { MasterAccountStage } from './master-account-stage';
 
 export interface InfraPipelineProps extends cdk.StackProps {
 
@@ -45,8 +47,7 @@ export class InfraPipeline extends cdk.Stack {
 
     }
 
-    //const pipeline = new pipelines.CdkPipeline(this, 'CdkPipeline', {
-    new pipelines.CdkPipeline(this, 'CdkPipeline', {
+    const pipeline = new pipelines.CdkPipeline(this, 'CdkPipeline', {
       pipelineName: `${envVars.PROJECT_NAME}-infra-pipeline`,
       cloudAssemblyArtifact: cdkOutputArtifact,
       sourceAction: sourceAction,
@@ -58,6 +59,10 @@ export class InfraPipeline extends cdk.Stack {
         buildCommand: 'yarn build',
       }),
     });
+
+    pipeline.addApplicationStage(new MasterAccountStage(this, 'MasterAccount', {
+      env: devEnv,
+    } ) );
 
   }
 }

@@ -1,0 +1,10 @@
+Parameters:
+  BucketName:
+    Type: String
+    Default: 'jingood0604-test-bucket'
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
