@@ -60,7 +60,7 @@ export class InfraPipeline extends cdk.Stack {
       }),
     });
 
-    pipeline.addApplicationStage(new MasterAccountStage(this, 'MasterAccount', {
+    pipeline.addApplicationStage(new MasterAccountStage(this, 'main-account', {
       env: devEnv,
     } ) );
 

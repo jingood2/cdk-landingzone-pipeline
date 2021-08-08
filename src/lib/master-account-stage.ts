@@ -13,7 +13,7 @@ export class MasterAccountStage extends cdk.Stage {
     /**
      * NOTE: Add DefaultStackSynthesizer to stack
      */
-    new MyTemplateStack(this, 'audit-storage', {
+    new MyTemplateStack(this, 'audit', {
       synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
       env: devEnv,
     });
