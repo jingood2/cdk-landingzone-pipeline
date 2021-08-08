@@ -9,11 +9,11 @@ Parameters:
 Resources:
   CloudTrailTable:
     Properties:
-      DatabaseName: !Ref AuditingGlueDatabase
-      CatalogId: !Ref AWS::AccountId
+      DatabaseName: 'AuditingGlueDatabase'
+      CatalogId: 'id'
       TableInput:
         Description: !Sub 'CloudTrail table for ${CloudTrailBucket} bucket'
-        Name: !Ref CloudTrailTableName
+        Name: 'CloudTrailTableName'
         Parameters:
           classification: 'cloudtrail'
           EXTERNAL: 'TRUE'
