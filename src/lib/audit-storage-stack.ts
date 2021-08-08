@@ -40,7 +40,7 @@ export class AuditStorageStack extends cdk.Stack {
     cloudtrailBucket.addToResourcePolicy(new iam.PolicyStatement({
       sid: 'AWSCloudTrailBucketDelivery',
       principals: [new iam.ServicePrincipal('cloudtrail.amazonaws.com')],
-      actions: ['s3:GetBucketAcl'],
+      actions: ['s3:PutObject'],
       resources: [`${cloudtrailBucket.bucketArn}/*`],
       conditions: { StringEquals: { 's3:x-amz-acl': 'bucket-owner-full-control' } },
     }));
@@ -51,6 +51,28 @@ export class AuditStorageStack extends cdk.Stack {
       actions: ['s3:Delete*'],
       resources: [`${cloudtrailBucket.bucketArn}/*`],
       conditions: { ArnNotLike: { 'aws:PrincipalARN': `arn:aws:iam::${this.account}:group/admin/CAREFUL_DANGEROUS_AdminMasterAccountGroup` } },
+    }));
+
+    const configBucket = new s3.Bucket(this, 'config-bucket', {
+      bucketName: `config-${this.account}`,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      serverAccessLogsBucket: logingBucket,
+      serverAccessLogsPrefix: 'config-logs',
+      versioned: true,
+    });
+    configBucket.addToResourcePolicy(new iam.PolicyStatement({
+      sid: 'AWSConfigBucketPermissionsCheck',
+      principals: [new iam.ServicePrincipal('config.amazonaws.com')],
+      actions: ['s3:GetBucketAcl'],
+      resources: [`${configBucket.bucketArn}`],
+    }));
+    configBucket.addToResourcePolicy(new iam.PolicyStatement({
+      sid: 'AWSConfigBucketDelivery',
+      principals: [new iam.ServicePrincipal('config.amazonaws.com')],
+      actions: ['s3:PutObject'],
+      resources: [`${configBucket.bucketArn}/*`],
+      conditions: { StringEquals: { 's3:x-amz-acl': 'bucket-owner-full-control' } },
     }));
 
 
