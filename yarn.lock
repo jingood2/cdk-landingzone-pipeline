@@ -941,7 +941,7 @@
     "@aws-cdk/custom-resources" "1.117.0"
     constructs "^3.3.69"
 
-"@aws-cdk/aws-glue@1.117.0":
+"@aws-cdk/aws-glue@1.117.0", "@aws-cdk/aws-glue@^1.117.0":
   version "1.117.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-glue/-/aws-glue-1.117.0.tgz#95e0e5c470035f19338feff54e377e3ea5772ebc"
   integrity sha512-ur8nofssoIMnCC5pjAMw2+WWDPStYyzl9YnDgxfzzUPHnE14djqfwlyaL+GgPbMAw8Ryfan/wpJRqL8oAZZLdg==

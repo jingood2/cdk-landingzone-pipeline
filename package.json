@@ -49,6 +49,7 @@
     "@aws-cdk/aws-codedeploy": "^1.117.0",
     "@aws-cdk/aws-codepipeline": "^1.117.0",
     "@aws-cdk/aws-codepipeline-actions": "^1.117.0",
+    "@aws-cdk/aws-glue": "^1.117.0",
     "@aws-cdk/aws-iam": "^1.117.0",
     "@aws-cdk/aws-lambda": "^1.117.0",
     "@aws-cdk/aws-s3": "^1.117.0",

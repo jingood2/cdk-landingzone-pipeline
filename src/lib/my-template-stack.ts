@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as glue from '@aws-cdk/aws-glue';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as cfn_inc from '@aws-cdk/cloudformation-include';
 import * as cdk from '@aws-cdk/core';
@@ -12,7 +13,8 @@ export class MyTemplateStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: MyTemplateStackProps) {
     super(scope, id, props);
 
-    const BUCKET_PREFIX = 'audit-storage';
+    const BUCKET_PREFIX = 'audit';
+    const STACK = cdk.Stack.of(this);
 
     // 1. Audit Logging Bucket
     const cfnLoggingTemplate = new cfn_inc.CfnInclude(this, 'logging-template', {
@@ -22,10 +24,18 @@ export class MyTemplateStack extends cdk.Stack {
       }, */
     });
 
-    const stack = cdk.Stack.of(this);
-
     const cfnLoggingBucket = cfnLoggingTemplate.getResource('LoggingBucket') as s3.CfnBucket;
-    cfnLoggingBucket.bucketName = `${BUCKET_PREFIX}-logging-${stack.account}`;
+    cfnLoggingBucket.bucketName = `${BUCKET_PREFIX}-logging-${STACK.account}`;
+
+
+    // 2. Audit Glue Database template
+    const cfnAthenaTemplate = new cfn_inc.CfnInclude(this, 'athena-template', {
+      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/athena.template.yaml'),
+    });
+
+    const cfnAthenaGlueDatabase = cfnAthenaTemplate.getResource('AuditingGlueDatabase') as glue.CfnDatabase;
+    cfnAthenaGlueDatabase.catalogId = `${STACK.account}`;
+
 
   }
 }
