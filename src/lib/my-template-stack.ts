@@ -12,7 +12,7 @@ export class MyTemplateStack extends cdk.Stack {
     super(scope, id, props);
 
     // add cfn
-    const loggingTemplate = new cfn_inc.CfnInclude(this, 'logging-template', {
+    new cfn_inc.CfnInclude(this, 'logging-template', {
       templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/logging.template.yaml'),
       /* parameters: {
         ['BucketName']: 'jingood0604-mutation-bucket',
