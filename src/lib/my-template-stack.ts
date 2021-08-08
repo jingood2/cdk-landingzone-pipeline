@@ -12,8 +12,10 @@ export class MyTemplateStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: MyTemplateStackProps) {
     super(scope, id, props);
 
-    // add cfn
-    const cfnTemplate = new cfn_inc.CfnInclude(this, 'logging-template', {
+    const BUCKET_PREFIX = 'audit-storage';
+
+    // 1. Audit Logging Bucket
+    const cfnLoggingTemplate = new cfn_inc.CfnInclude(this, 'logging-template', {
       templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/logging.template.yaml'),
       /* parameters: {
         ['BucketName']: 'jingood0604-mutation-bucket',
@@ -22,8 +24,8 @@ export class MyTemplateStack extends cdk.Stack {
 
     const stack = cdk.Stack.of(this);
 
-    const cfnBucket = cfnTemplate.getResource('LoggingBucket') as s3.CfnBucket;
-    cfnBucket.bucketName = `${stack.stackName}-logging-${stack.account}`;
+    const cfnLoggingBucket = cfnLoggingTemplate.getResource('LoggingBucket') as s3.CfnBucket;
+    cfnLoggingBucket.bucketName = `${BUCKET_PREFIX}-logging-${stack.account}`;
 
   }
 }
