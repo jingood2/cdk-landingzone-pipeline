@@ -57,6 +57,28 @@ export class AuditStorageStack extends cdk.Stack {
       conditions: { ArnNotLike: { 'aws:PrincipalARN': `arn:aws:iam::${this.account}:group/admin/CAREFUL_DANGEROUS_AdminMasterAccountGroup` } },
     }));
 
+    const flowlogsBucket = new s3.Bucket(this, 'flowlogs-bucket', {
+      bucketName: `${envVars.AUDIT_LOG_PREFIX}-flowlogs-${this.account}`,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      serverAccessLogsBucket: logingBucket,
+      serverAccessLogsPrefix: 'flowlogs-logs',
+    });
+    flowlogsBucket.addToResourcePolicy(new iam.PolicyStatement({
+      sid: 'AWSLogDeliveryAclCheck',
+      principals: [new iam.ServicePrincipal('delivery.logs.amazonaws.com')],
+      actions: ['s3:GetBucketAcl'],
+      resources: [`${flowlogsBucket.bucketArn}`],
+    }));
+    flowlogsBucket.addToResourcePolicy(new iam.PolicyStatement({
+      sid: 'AWSLogDeliveryWrite',
+      principals: [new iam.ServicePrincipal('delivery.logs.amazonaws.com')],
+      actions: ['s3:PutObject'],
+      resources: [`${flowlogsBucket.bucketArn}/*`],
+      conditions: { StringEquals: { 's3:x-amz-acl': 'bucket-owner-full-control' } },
+    }));
+
+
     const configBucket = new s3.Bucket(this, 'config-bucket', {
       bucketName: `${envVars.AUDIT_LOG_PREFIX}-config-${this.account}`,
       encryption: s3.BucketEncryption.S3_MANAGED,
@@ -109,6 +131,15 @@ export class AuditStorageStack extends cdk.Stack {
       name: 'cloudtrail',
       description: `CloudTrail table for ${cloudtrailBucket.bucketName}`,
       storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
+    };
+
+    const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
+    cfnFlowLogsTable.databaseName = glueDatabase.databaseName;
+    cfnFlowLogsTable.catalogId = this.account;
+    cfnFlowLogsTable.tableInput = {
+      name: 'flowlogs',
+      description: `FlowLogs table for ${flowlogsBucket.bucketName}`,
+      storageDescriptor: { location: `s3://${flowlogsBucket.bucketName}/` },
     };
 
 
