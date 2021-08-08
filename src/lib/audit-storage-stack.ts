@@ -99,7 +99,7 @@ export class AuditStorageStack extends cdk.Stack {
     });
 
     const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
-      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/table.template.yaml'),
+      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/tables.template.yaml'),
     });
 
     const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailTable') as glue.CfnTable;
