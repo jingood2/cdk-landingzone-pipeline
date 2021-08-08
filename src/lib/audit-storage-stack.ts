@@ -1,12 +1,13 @@
 import * as path from 'path';
+import * as config from '@aws-cdk/aws-config';
 import * as glue from '@aws-cdk/aws-glue';
 import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs';
 import * as s3 from '@aws-cdk/aws-s3';
-import * as cdk from '@aws-cdk/core';
 import * as s3n from '@aws-cdk/aws-s3-notifications';
-import * as config from '@aws-cdk/aws-config';
+import * as cfn_inc from '@aws-cdk/cloudformation-include';
+import * as cdk from '@aws-cdk/core';
 import { envVars } from './config';
 
 export interface AuditStorageStackProps extends cdk.StackProps {
@@ -85,18 +86,30 @@ export class AuditStorageStack extends cdk.Stack {
     });
 
 
-    //const glueDatabase = new glue.Database(this, 'audit-database', {
-    new glue.Database(this, 'audit-database', {
+    const glueDatabase = new glue.Database(this, 'audit-database', {
       databaseName: 'auditing',
     });
 
     const cloudtrailPtLambda = this.makePartitioningLambda('CloudTrail');
     cloudtrailBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(cloudtrailPtLambda));
 
-    new config.CfnConfigurationAggregator(this,'ConfigConfigurationAggregator', {
+    new config.CfnConfigurationAggregator(this, 'ConfigConfigurationAggregator', {
       configurationAggregatorName: 'ConfigurationAggregator',
       accountAggregationSources: [{ accountIds: ['037729278610'], allAwsRegions: true }],
     });
+
+    const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
+      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/table.template.yaml'),
+    });
+
+    const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailTable') as glue.CfnTable;
+    cfnCloudTrailTable.tableInput = {
+      name: 'cloudtrail',
+      description: `CloudTrail table for ${cloudtrailBucket.bucketName}`,
+      storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
+    };
+    cfnCloudTrailTable.databaseName = glueDatabase.databaseName;
+    cfnCloudTrailTable.catalogId = this.account;
 
 
     //const flowlogPtLambda = this.makePartitioningLambda('FlowLog');
