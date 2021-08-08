@@ -103,13 +103,13 @@ export class AuditStorageStack extends cdk.Stack {
     });
 
     const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailTable') as glue.CfnTable;
+    cfnCloudTrailTable.databaseName = glueDatabase.databaseName;
+    cfnCloudTrailTable.catalogId = this.account;
     cfnCloudTrailTable.tableInput = {
       name: 'cloudtrail',
       description: `CloudTrail table for ${cloudtrailBucket.bucketName}`,
       storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
     };
-    cfnCloudTrailTable.databaseName = glueDatabase.databaseName;
-    cfnCloudTrailTable.catalogId = this.account;
 
 
     //const flowlogPtLambda = this.makePartitioningLambda('FlowLog');
