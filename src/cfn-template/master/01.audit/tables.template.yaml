@@ -12,7 +12,7 @@ Resources:
       DatabaseName: 'AuditingGlueDatabase'
       CatalogId: 'id'
       TableInput:
-        Description: !Sub 'CloudTrail table for ${CloudTrailBucket} bucket'
+        Description: 'CloudTrail table for bucket'
         Name: 'CloudTrailTableName'
         Parameters:
           classification: 'cloudtrail'
