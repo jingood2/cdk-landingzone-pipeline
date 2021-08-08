@@ -110,7 +110,7 @@ export class AuditStorageStack extends cdk.Stack {
     myRole.addToPolicy(new iam.PolicyStatement({
       sid: 'ResourceLevelS3Permissions',
       actions: ['s3:PutObject', 's3:GetObject', 's3:GetBucketLocation'],
-      resources: ['*/*'],
+      resources: ['*'],
     }));
     myRole.addToPolicy(new iam.PolicyStatement({
       sid: 'Athena',
