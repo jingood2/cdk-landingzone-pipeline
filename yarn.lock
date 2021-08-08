@@ -534,7 +534,7 @@
     constructs "^3.3.69"
     punycode "^2.1.1"
 
-"@aws-cdk/aws-config@1.117.0":
+"@aws-cdk/aws-config@1.117.0", "@aws-cdk/aws-config@^1.117.0":
   version "1.117.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-config/-/aws-config-1.117.0.tgz#056848cfe70d710098b1a69d9dd77c4fafc6b238"
   integrity sha512-AZ4E/da2wIHJCSjP11uet3+b9i/sFly7WjelvOe0BiiRw99y7I6UxxKSzQe9W+8PYyaV0WfPww6RC1O69oZXBQ==
@@ -1491,6 +1491,19 @@
     "@aws-cdk/aws-s3" "1.117.0"
     "@aws-cdk/core" "1.117.0"
     "@aws-cdk/cx-api" "1.117.0"
+    constructs "^3.3.69"
+
+"@aws-cdk/aws-s3-notifications@^1.117.0":
+  version "1.117.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-s3-notifications/-/aws-s3-notifications-1.117.0.tgz#b9e0e53bb1f480deb935cd145ba64c1b3e233511"
+  integrity sha512-civlEl1jR36WtrGgHuGsn7dxhaF1xRxZvUG2zSFyYBJBH3gDGWZ7NY4DsT+9nipco6Xm+0JFJRjmQ2XpmG242A==
+  dependencies:
+    "@aws-cdk/aws-iam" "1.117.0"
+    "@aws-cdk/aws-lambda" "1.117.0"
+    "@aws-cdk/aws-s3" "1.117.0"
+    "@aws-cdk/aws-sns" "1.117.0"
+    "@aws-cdk/aws-sqs" "1.117.0"
+    "@aws-cdk/core" "1.117.0"
     constructs "^3.3.69"
 
 "@aws-cdk/aws-s3@1.117.0", "@aws-cdk/aws-s3@^1.117.0":
