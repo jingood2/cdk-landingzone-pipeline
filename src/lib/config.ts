@@ -4,7 +4,7 @@ export const envVars = {
   REGION: process.env.REGION || 'ap-northeast-2',
   PROJECT_NAME: 'skcnc',
   GIT_PROVIDER: 'github',
-  AUDIT_LOG_PREFIX: 'audit-test',
+  AUDIT_LOG_PREFIX: 'audit',
   INFRA: {
     REPO_NAME: process.env.REPO_NAME || 'cdk-landingzone-pipeline',
     REPO_OWNER: process.env.REPO_OWNER || 'jingood2',

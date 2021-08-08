@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # get buckets list => returns the timestamp + bucket name separated by lines
-S3LS="$(aws s3 ls | grep 'lambdapipelines-pipelineartifactsbucketaea9a052-*')" 
+S3LS="$(aws s3 ls | grep 'audit-test-*')" 
 
 # split the lines into an array. @see https://stackoverflow.com/a/13196466/6569593
 oldIFS="$IFS"
