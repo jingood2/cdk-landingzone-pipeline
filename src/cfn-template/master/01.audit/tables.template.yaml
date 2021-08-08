@@ -1,0 +1,152 @@
+Parameters:
+  CloudTrailTableName:
+    Type: String
+    Default: cloudtrail
+  FlowLogsTableName:
+    Type: String
+    Default: flowlogs
+
+Resources:
+  CloudTrailTable:
+    Properties:
+      DatabaseName: !Ref AuditingGlueDatabase
+      CatalogId: !Ref AWS::AccountId
+      TableInput:
+        Description: !Sub 'CloudTrail table for ${CloudTrailBucket} bucket'
+        Name: !Ref CloudTrailTableName
+        Parameters:
+          classification: 'cloudtrail'
+          EXTERNAL: 'TRUE'
+        PartitionKeys:
+          - Name: account
+            Type: string
+          - Name: region
+            Type: string
+          - Name: date
+            Type: string
+        StorageDescriptor:
+          Columns:
+          - Name: eventVersion
+            Type: 'string'
+          - Name: userIdentity
+            Type: 'struct<type:string,principalId:string,arn:string,accountId:string,invokedBy:string,accessKeyId:string,userName:string,sessionContext:struct<attributes:struct<mfaAuthenticated:string,creationDate:string>,sessionIssuer:struct<type:string,principalId:string,arn:string,accountId:string,userName:string>>>'
+          - Name: eventTime
+            Type: 'string'
+          - Name: eventSource
+            Type: 'string'
+          - Name: eventName
+            Type: 'string'
+          - Name: awsRegion
+            Type: 'string'
+          - Name: sourceIpAddress
+            Type: 'string'
+          - Name: userAgent
+            Type: 'string'
+          - Name: errorCode
+            Type: 'string'
+          - Name: errorMessage
+            Type: 'string'
+          - Name: requestParameters
+            Type: 'string'
+          - Name: responseElements
+            Type: 'string'
+          - Name: additionalEventData
+            Type: 'string'
+          - Name: requestId
+            Type: 'string'
+          - Name: eventId
+            Type: 'string'
+          - Name: resources
+            Type: 'array<struct<arn:string,accountId:string,type:string>>'
+          - Name: eventType
+            Type: 'string'
+          - Name: apiVersion
+            Type: 'string'
+          - Name: readOnly
+            Type: 'string'
+          - Name: recipientAccountId
+            Type: 'string'
+          - Name: serviceEventDetails
+            Type: 'string'
+          - Name: sharedEventID
+            Type: 'string'
+          - Name: vpcEndpointId
+            Type: 'string'
+          InputFormat: 'com.amazon.emr.cloudtrail.CloudTrailInputFormat'
+          Location: !Sub 's3://${CloudTrailBucket}/'
+          OutputFormat: 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+          NumberOfBuckets: -1
+          SkewedInfo:
+            SkewedColumnNames: []
+            SkewedColumnValues: []
+            SkewedColumnValueLocationMaps: {}
+          SerdeInfo:
+            Parameters:
+              serialization.format: '1'
+            SerializationLibrary: 'com.amazon.emr.hive.serde.CloudTrailSerde'
+        TableType: EXTERNAL_TABLE
+    Type: AWS::Glue::Table
+
+
+  FlowLogsTable:
+    Properties:
+      DatabaseName: !Ref AuditingGlueDatabase
+      CatalogId: !Ref AWS::AccountId
+      TableInput:
+        Description: !Sub 'CloudTrail table for ${CloudTrailBucket} bucket'
+        Name: !Ref FlowLogsTableName
+        Parameters:
+          'skip.header.line.count': '1'
+          EXTERNAL: 'TRUE'
+        PartitionKeys:
+          - Name: account
+            Type: string
+          - Name: region
+            Type: string
+          - Name: date
+            Type: string
+        StorageDescriptor:
+          Columns:
+            - Name: version
+              Type: 'int'
+            - Name: sourceaccount
+              Type: 'string'
+            - Name: interfaceid
+              Type: 'string'
+            - Name: sourceaddress
+              Type: 'string'
+            - Name: destinationaddress
+              Type: 'string'
+            - Name: sourceport
+              Type: 'int'
+            - Name: destinationport
+              Type: 'int'
+            - Name: protocol
+              Type: 'int'
+            - Name: numpackets
+              Type: 'int'
+            - Name: numbytes
+              Type: 'bigint'
+            - Name: starttime
+              Type: 'int'
+            - Name: endtime
+              Type: 'int'
+            - Name: action
+              Type: 'string'
+            - Name: logstatus
+              Type: 'string'
+          InputFormat: 'org.apache.hadoop.mapred.TextInputFormat'
+          Location: !Sub 's3://${FlowLogsBucket}/'
+          OutputFormat: 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+          NumberOfBuckets: -1
+          SkewedInfo:
+            SkewedColumnNames: []
+            SkewedColumnValues: []
+            SkewedColumnValueLocationMaps: {}
+          SerdeInfo:
+            Parameters:
+              serialization.format: ' '
+              field.delim: ' '
+            SerializationLibrary: 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
+        TableType: EXTERNAL_TABLE
+    Type: AWS::Glue::Table

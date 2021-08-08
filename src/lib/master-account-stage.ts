@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import { devEnv } from '../main';
-import { MyTemplateStack } from './my-template-stack';
+import { AuditStorageStack } from './audit-storage-stack';
+//import { MyTemplateStack } from './my-template-stack';
 
 export interface MasterAccountStageProps extends cdk.StageProps{
 
@@ -13,7 +14,11 @@ export class MasterAccountStage extends cdk.Stage {
     /**
      * NOTE: Add DefaultStackSynthesizer to stack
      */
-    new MyTemplateStack(this, 'audit', {
+    /* new MyTemplateStack(this, 'audit', {
+      synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
+      env: devEnv,
+    }); */
+    new AuditStorageStack(this, 'audit-storage', {
       synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
       env: devEnv,
     });

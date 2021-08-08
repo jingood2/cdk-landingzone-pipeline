@@ -1185,7 +1185,7 @@
   dependencies:
     "@aws-cdk/core" "1.117.0"
 
-"@aws-cdk/aws-logs@1.117.0":
+"@aws-cdk/aws-logs@1.117.0", "@aws-cdk/aws-logs@^1.117.0":
   version "1.117.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-logs/-/aws-logs-1.117.0.tgz#088f44855d3535c3d993c16fc76f1fd1ba2fadc5"
   integrity sha512-j0mU1HVE1mbHhF2eanbBp/+jbukg2W3JhZZNG5qzCBcsoKUpe5Yr6GAzuPhOw6I1a98wZBYjvxn5LfSfWL0edQ==

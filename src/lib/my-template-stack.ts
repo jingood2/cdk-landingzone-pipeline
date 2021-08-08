@@ -13,7 +13,7 @@ export class MyTemplateStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: MyTemplateStackProps) {
     super(scope, id, props);
 
-    const BUCKET_PREFIX = 'audit';
+    //const BUCKET_PREFIX = 'audit';
     const STACK = cdk.Stack.of(this);
 
     // 1. Audit Logging Bucket
@@ -25,16 +25,26 @@ export class MyTemplateStack extends cdk.Stack {
     });
 
     const cfnLoggingBucket = cfnLoggingTemplate.getResource('LoggingBucket') as s3.CfnBucket;
-    cfnLoggingBucket.bucketName = `${BUCKET_PREFIX}-logging-${STACK.account}`;
+    cfnLoggingBucket.bucketName = `${STACK.stackName}-logging-${STACK.account}`;
 
 
-    // 2. Audit Glue Database template
+    // 2. Audit Glue Database
     const cfnAthenaTemplate = new cfn_inc.CfnInclude(this, 'athena-template', {
       templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/athena.template.yaml'),
     });
 
     const cfnAthenaGlueDatabase = cfnAthenaTemplate.getResource('AuditingGlueDatabase') as glue.CfnDatabase;
     cfnAthenaGlueDatabase.catalogId = `${STACK.account}`;
+
+    // 3. Audit glue table
+    const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
+      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/table.template.yaml'),
+    });
+
+    const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailtable') as glue.CfnTable;
+    cfnCloudTrailTable.databaseName = cfnAthenaGlueDatabase.ref;
+    cfnCloudTrailTable.catalogId = `${STACK.account}`;
+    //cfnCloudTrailTable.tableInput = { location: `s3://${}`}
 
 
   }
