@@ -5,6 +5,7 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as cdk from '@aws-cdk/core';
+import { envVars } from './config';
 
 export interface AuditStorageStackProps extends cdk.StackProps {
 
@@ -15,14 +16,14 @@ export class AuditStorageStack extends cdk.Stack {
     super(scope, id, props);
 
     const logingBucket = new s3.Bucket(this, 'logging-bucket', {
-      bucketName: `logging-${this.account}`,
+      bucketName: `${envVars.AUDIT_LOG_PREFIX}-logging-${this.account}`,
       encryption: s3.BucketEncryption.S3_MANAGED,
       accessControl: s3.BucketAccessControl.LOG_DELIVERY_WRITE,
       serverAccessLogsPrefix: 'logging',
     });
 
     const cloudtrailBucket = new s3.Bucket(this, 'cloudtrail-bucket', {
-      bucketName: `cloudtrail-${this.account}`,
+      bucketName: `${envVars.AUDIT_LOG_PREFIX}-cloudtrail-${this.account}`,
       encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
@@ -54,7 +55,7 @@ export class AuditStorageStack extends cdk.Stack {
     }));
 
     const configBucket = new s3.Bucket(this, 'config-bucket', {
-      bucketName: `config-${this.account}`,
+      bucketName: `${envVars.AUDIT_LOG_PREFIX}-config-${this.account}`,
       encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
@@ -78,7 +79,7 @@ export class AuditStorageStack extends cdk.Stack {
 
     //const athenaQueryResultBucket = new s3.Bucket(this, 'athena-bucket', {
     new s3.Bucket(this, 'athena-bucket', {
-      bucketName: `athenaqueryresult-${this.account}`,
+      bucketName: `${envVars.AUDIT_LOG_PREFIX}-athenaqueryresult-${this.account}`,
     });
 
 
