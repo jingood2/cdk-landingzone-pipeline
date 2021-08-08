@@ -14,6 +14,9 @@ export class MyTemplateStack extends cdk.Stack {
     // add cfn
     new cfn_inc.CfnInclude(this, 'Template', {
       templateFile: path.join(__dirname, '..', 'cfn-template/master/my-template.yaml'),
+      parameters: {
+        ['BucketName']: 'jingood0604-mutation-bucket',
+      },
     });
 
   }
