@@ -20,14 +20,14 @@ export class LogArchiveConstruct extends cdk.Construct {
 
     const logingBucket = new s3.Bucket(this, 'logging-bucket', {
       bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-logging-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
-      //encryption: s3.BucketEncryption.S3_MANAGED,
+      encryption: s3.BucketEncryption.S3_MANAGED,
       accessControl: s3.BucketAccessControl.LOG_DELIVERY_WRITE,
       serverAccessLogsPrefix: 'logging',
     });
 
     const cloudtrailBucket = new s3.Bucket(this, 'cloudtrail-bucket', {
       bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-cloudtrail-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
-      //encryption: s3.BucketEncryption.S3_MANAGED,
+      encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
       serverAccessLogsPrefix: 'cloudtrail-logs',
@@ -59,7 +59,7 @@ export class LogArchiveConstruct extends cdk.Construct {
 
     const flowlogsBucket = new s3.Bucket(this, 'flowlogs-bucket', {
       bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-flowlogs-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
-      //encryption: s3.BucketEncryption.S3_MANAGED,
+      encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
       serverAccessLogsPrefix: 'flowlogs-logs',
@@ -81,7 +81,7 @@ export class LogArchiveConstruct extends cdk.Construct {
 
     const configBucket = new s3.Bucket(this, 'config-bucket', {
       bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-config-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
-      //encryption: s3.BucketEncryption.S3_MANAGED,
+      encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
       serverAccessLogsPrefix: 'config-logs',
@@ -139,17 +139,17 @@ export class LogArchiveConstruct extends cdk.Construct {
       storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
     };
 
-    /* const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
+    const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
     cfnFlowLogsTable.databaseName = glueDatabase.databaseName;
     cfnFlowLogsTable.catalogId = envVars.MASTER.ACCOUNT_ID;
     cfnFlowLogsTable.tableInput = {
       name: 'flowlogs',
       description: `FlowLogs table for ${flowlogsBucket.bucketName}`,
       storageDescriptor: { location: `s3://${flowlogsBucket.bucketName}/` },
-    }; */
+    };
 
 
-    //const flowlogPtLambda = this.makePartitioningLambda('FlowLog');
+    this.makePartitioningLambda('FlowLog');
 
   }
 
