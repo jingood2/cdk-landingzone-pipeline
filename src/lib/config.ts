@@ -13,7 +13,7 @@ export const envVars = {
     REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION: 'true',
   },
   LOG_ARCHIVE: {
-    ACCOUNT_ID: '037729278610',
+    ACCOUNT_ID: '318126949465',
     BUCKET_PREFIX: 'new-audit',
   },
   SERVICE: {

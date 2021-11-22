@@ -53,7 +53,7 @@ export class IamGroupConstruct extends cdk.Construct {
 
     // 2.UserManagement
     const userCredentialsManagement = new iam.Group(this, 'UserCredentialsManagement', {
-      groupName: 'UserCredentialsManagement',
+      groupName: 'UserCredentialsManagementGroup',
       path: '/admin/',
     });
 
