@@ -26,7 +26,7 @@ export class LoggingAccountStage extends cdk.Stage {
 
     new LoggingAccountStack(this, 'logging', {
       //synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
-      env: { account: '037729278610', region: 'ap-northeast-2' },
+      //env: { account: '037729278610', region: 'ap-northeast-2' },
     });
   }
 }
