@@ -6,7 +6,7 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as s3n from '@aws-cdk/aws-s3-notifications';
-//import * as cfn_inc from '@aws-cdk/cloudformation-include';
+import * as cfn_inc from '@aws-cdk/cloudformation-include';
 import * as cdk from '@aws-cdk/core';
 import { envVars } from '../config';
 
@@ -108,11 +108,7 @@ export class LogArchiveConstruct extends cdk.Construct {
     });
 
 
-    /* const glueDatabase = new glue.Database(this, 'audit-database', {
-      databaseName: 'auditing',
-    });
- */
-    new glue.Database(this, 'audit-database', {
+    const glueDatabase = new glue.Database(this, 'audit-database', {
       databaseName: 'auditing',
     });
 
@@ -130,7 +126,6 @@ export class LogArchiveConstruct extends cdk.Construct {
       }],
     });
 
-    /*
     const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
       templateFile: path.join(__dirname, '../..', 'cfn-template/master/01.audit/tables.template.yaml'),
     });
@@ -143,6 +138,8 @@ export class LogArchiveConstruct extends cdk.Construct {
       description: `CloudTrail table for ${cloudtrailBucket.bucketName}`,
       storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
     };
+
+    /*
 
     const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
     cfnFlowLogsTable.databaseName = glueDatabase.databaseName;
@@ -161,7 +158,7 @@ export class LogArchiveConstruct extends cdk.Construct {
   private makePartitioningLambda(tablename: string) : lambda.Function {
 
     const myRole = new iam.Role(this, `${tablename}PartitioningLambdaExecutionRole`, {
-      roleName: `${envVars.COMPANY_NAME}-${tablename}PartitioningLambdaExecutionRole`,
+      roleName: `${tablename}PartitioningLambdaExecutionRole`,
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       path: '/',
     });
