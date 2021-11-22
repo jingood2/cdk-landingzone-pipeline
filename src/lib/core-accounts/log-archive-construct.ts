@@ -8,26 +8,26 @@ import * as s3 from '@aws-cdk/aws-s3';
 import * as s3n from '@aws-cdk/aws-s3-notifications';
 import * as cfn_inc from '@aws-cdk/cloudformation-include';
 import * as cdk from '@aws-cdk/core';
-import { envVars } from './config';
+import { envVars } from '../config';
 
-export interface AuditStorageStackProps extends cdk.StackProps {
+export interface LogArchiveConstructProps extends cdk.StackProps{
 
 }
 
-export class AuditStorageStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props: AuditStorageStackProps) {
-    super(scope, id, props);
+export class LogArchiveConstruct extends cdk.Construct {
+  constructor(scope: cdk.Construct, id: string ) {
+    super(scope, id);
 
     const logingBucket = new s3.Bucket(this, 'logging-bucket', {
-      bucketName: `${envVars.AUDIT_LOG_PREFIX}-logging-${this.account}`,
-      encryption: s3.BucketEncryption.S3_MANAGED,
+      bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-logging-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
+      //encryption: s3.BucketEncryption.S3_MANAGED,
       accessControl: s3.BucketAccessControl.LOG_DELIVERY_WRITE,
       serverAccessLogsPrefix: 'logging',
     });
 
     const cloudtrailBucket = new s3.Bucket(this, 'cloudtrail-bucket', {
-      bucketName: `${envVars.AUDIT_LOG_PREFIX}-cloudtrail-${this.account}`,
-      encryption: s3.BucketEncryption.S3_MANAGED,
+      bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-cloudtrail-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
+      //encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
       serverAccessLogsPrefix: 'cloudtrail-logs',
@@ -54,12 +54,12 @@ export class AuditStorageStack extends cdk.Stack {
       principals: [new iam.AnyPrincipal()],
       actions: ['s3:Delete*'],
       resources: [`${cloudtrailBucket.bucketArn}/*`],
-      conditions: { ArnNotLike: { 'aws:PrincipalARN': `arn:aws:iam::${this.account}:group/admin/CAREFUL_DANGEROUS_AdminMasterAccountGroup` } },
+      conditions: { ArnNotLike: { 'aws:PrincipalARN': `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:group/admin/AdminMasterAccountGroup` } },
     }));
 
     const flowlogsBucket = new s3.Bucket(this, 'flowlogs-bucket', {
-      bucketName: `${envVars.AUDIT_LOG_PREFIX}-flowlogs-${this.account}`,
-      encryption: s3.BucketEncryption.S3_MANAGED,
+      bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-flowlogs-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
+      //encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
       serverAccessLogsPrefix: 'flowlogs-logs',
@@ -80,8 +80,8 @@ export class AuditStorageStack extends cdk.Stack {
 
 
     const configBucket = new s3.Bucket(this, 'config-bucket', {
-      bucketName: `${envVars.AUDIT_LOG_PREFIX}-config-${this.account}`,
-      encryption: s3.BucketEncryption.S3_MANAGED,
+      bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-config-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
+      //encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
       serverAccessLogsPrefix: 'config-logs',
@@ -104,7 +104,7 @@ export class AuditStorageStack extends cdk.Stack {
 
     //const athenaQueryResultBucket = new s3.Bucket(this, 'athena-bucket', {
     new s3.Bucket(this, 'athena-bucket', {
-      bucketName: `${envVars.AUDIT_LOG_PREFIX}-athenaqueryresult-${this.account}`,
+      bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-athenaqueryresult-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
     });
 
 
@@ -117,16 +117,23 @@ export class AuditStorageStack extends cdk.Stack {
 
     new config.CfnConfigurationAggregator(this, 'ConfigConfigurationAggregator', {
       configurationAggregatorName: 'ConfigurationAggregator',
-      accountAggregationSources: [{ accountIds: ['037729278610'], allAwsRegions: true }],
+      accountAggregationSources: [{
+        accountIds: [
+          //`${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
+          `${envVars.MASTER.ACCOUNT_ID}`,
+          `${envVars.SERVICE.LIST_OF_ACCOUNTS}`,
+        ],
+        allAwsRegions: true,
+      }],
     });
 
     const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
-      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/tables.template.yaml'),
+      templateFile: path.join(__dirname, '../..', 'cfn-template/master/01.audit/tables.template.yaml'),
     });
 
     const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailTable') as glue.CfnTable;
     cfnCloudTrailTable.databaseName = glueDatabase.databaseName;
-    cfnCloudTrailTable.catalogId = this.account;
+    cfnCloudTrailTable.catalogId = envVars.MASTER.ACCOUNT_ID;
     cfnCloudTrailTable.tableInput = {
       name: 'cloudtrail',
       description: `CloudTrail table for ${cloudtrailBucket.bucketName}`,
@@ -135,7 +142,7 @@ export class AuditStorageStack extends cdk.Stack {
 
     const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
     cfnFlowLogsTable.databaseName = glueDatabase.databaseName;
-    cfnFlowLogsTable.catalogId = this.account;
+    cfnFlowLogsTable.catalogId = envVars.MASTER.ACCOUNT_ID;
     cfnFlowLogsTable.tableInput = {
       name: 'flowlogs',
       description: `FlowLogs table for ${flowlogsBucket.bucketName}`,
@@ -186,7 +193,7 @@ export class AuditStorageStack extends cdk.Stack {
       functionName: `${tablename}PatitioningLambdaFunction`,
       timeout: cdk.Duration.seconds(180),
       handler: 'partition.handler',
-      code: lambda.Code.fromAsset(path.join(__dirname, '..', 'lambda-handler')),
+      code: lambda.Code.fromAsset(path.join(__dirname, '../..', 'lambda-handler')),
       logRetention: logs.RetentionDays.FIVE_DAYS,
       environment: {
         PartitionCheckTable: '',

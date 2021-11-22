@@ -1,6 +1,6 @@
 const { AwsCdkTypeScriptApp } = require('projen');
 const project = new AwsCdkTypeScriptApp({
-  cdkVersion: '1.117.0',
+  cdkVersion: '1.133.0',
   defaultReleaseBranch: 'main',
   name: 'cdk-landingzone-pipeline',
 

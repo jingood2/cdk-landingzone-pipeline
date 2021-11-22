@@ -1,6 +1,6 @@
 import { App, Construct, Stack, StackProps } from '@aws-cdk/core';
+import { CdkPipelinesStack } from './lib/cdk-pipelines';
 import { envVars, validateEnvVariables } from './lib/config';
-import { InfraPipeline } from './lib/infra-pipeline';
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
@@ -22,7 +22,7 @@ const app = new App();
 
 //new MyStack(app, 'my-stack-dev', { env: devEnv });
 // new MyStack(app, 'my-stack-prod', { env: prodEnv });
-new InfraPipeline(app, `${envVars.PROJECT_NAME}-infra-pipeline-stack`,
+new CdkPipelinesStack(app, `${envVars.COMPANY_NAME}-cdk-pipeline`,
   { env: devEnv } );
 
 app.synth();
