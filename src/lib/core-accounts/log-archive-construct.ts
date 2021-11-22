@@ -140,14 +140,14 @@ export class LogArchiveConstruct extends cdk.Construct {
       storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
     };
 
-    const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
+    /* const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
     cfnFlowLogsTable.databaseName = glueDatabase.databaseName;
     cfnFlowLogsTable.catalogId = envVars.MASTER.ACCOUNT_ID;
     cfnFlowLogsTable.tableInput = {
       name: 'flowlogs',
       description: `FlowLogs table for ${flowlogsBucket.bucketName}`,
       storageDescriptor: { location: `s3://${flowlogsBucket.bucketName}/` },
-    };
+    }; */
 
 
     //const flowlogPtLambda = this.makePartitioningLambda('FlowLog');
