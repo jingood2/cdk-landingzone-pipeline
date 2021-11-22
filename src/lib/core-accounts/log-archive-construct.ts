@@ -132,7 +132,7 @@ export class LogArchiveConstruct extends cdk.Construct {
 
     const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailTable') as glue.CfnTable;
     cfnCloudTrailTable.databaseName = glueDatabase.databaseName;
-    cfnCloudTrailTable.catalogId = envVars.MASTER.ACCOUNT_ID;
+    cfnCloudTrailTable.catalogId = envVars.LOG_ARCHIVE.ACCOUNT_ID;
     cfnCloudTrailTable.tableInput = {
       name: 'cloudtrail',
       description: `CloudTrail table for ${cloudtrailBucket.bucketName}`,
@@ -185,7 +185,7 @@ export class LogArchiveConstruct extends cdk.Construct {
     }));
     myRole.addToPolicy(new iam.PolicyStatement({
       sid: 'Glue',
-      actions: ['glue:GetDatabase', 'glue:GetTable', 'glue:BatchCreatePartition'],
+      actions: ['glue:GetDatabase', 'glue:CreateTable', 'glue:GetTable', 'glue:BatchCreatePartition'],
       resources: ['*'],
     }));
 
