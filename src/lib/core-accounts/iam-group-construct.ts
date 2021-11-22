@@ -184,7 +184,7 @@ export class IamGroupConstruct extends cdk.Construct {
           'sts:AssumeRole',
         ],
         resources: [
-          `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/*`,
+          'arn:aws:iam::${AWS::AccountId}:role/*',
         ],
         effect: iam.Effect.DENY,
         conditions: [
