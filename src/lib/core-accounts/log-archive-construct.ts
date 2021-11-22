@@ -149,7 +149,7 @@ export class LogArchiveConstruct extends cdk.Construct {
     };
 
 
-    this.makePartitioningLambda('FlowLog');
+    //this.makePartitioningLambda('FlowLogs');
 
   }
 
