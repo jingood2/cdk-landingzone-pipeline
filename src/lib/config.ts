@@ -10,7 +10,7 @@ export const envVars = {
   GITHUB_TOKEN: 'atcl/jingood2/github-token',
   MASTER: {
     ACCOUNT_ID: '037729278610',
-    REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION: 'true',
+    REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION: 'false',
   },
   LOG_ARCHIVE: {
     ACCOUNT_ID: '318126949465',

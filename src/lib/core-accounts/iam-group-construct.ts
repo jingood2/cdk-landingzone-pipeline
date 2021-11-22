@@ -96,9 +96,7 @@ export class IamGroupConstruct extends cdk.Construct {
             'iam:ListUsers',
             'iam:ListVirtualMFADevices',
           ],
-          Resource: [
-            '*',
-          ],
+          Resource: '*',
         },
         {
           Sid: 'AllowIndividualUserToListOnlyTheirOwnMFA',
