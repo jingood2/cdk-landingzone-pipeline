@@ -120,7 +120,6 @@ export class LogArchiveConstruct extends cdk.Construct {
       accountAggregationSources: [{
         accountIds: [
           //`${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
-          `${envVars.MASTER.ACCOUNT_ID}`,
           `${envVars.SERVICE.LIST_OF_ACCOUNTS}`,
         ],
         allAwsRegions: true,

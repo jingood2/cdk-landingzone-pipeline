@@ -17,7 +17,7 @@ export const envVars = {
     BUCKET_PREFIX: 'new-audit',
   },
   SERVICE: {
-    LIST_OF_ACCOUNTS: [''],
+    LIST_OF_ACCOUNTS: ['037729278610'],
   },
 };
 
