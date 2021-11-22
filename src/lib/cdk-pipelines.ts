@@ -3,7 +3,8 @@ import * as cdk from '@aws-cdk/core';
 import { SecretValue } from '@aws-cdk/core';
 import { CodePipeline, CodePipelineSource, ShellStep } from '@aws-cdk/pipelines';
 import { envVars } from './config';
-import { CoreAccountStage } from './core-account-stage';
+import { LoggingAccountStage } from './logging-account-stage';
+import { MasterAccountStage } from './master-account-stage';
 //import { DynamoDbCustomLoaderStack } from './infra/ddb-custom-loader-stack';
 
 export interface CodepipelineSourceProps {
@@ -79,11 +80,19 @@ export class CdkPipelinesStack extends cdk.Stack {
       }),
     });
 
+
     // ToDo: Add ApplicationStage
     //pipeline.addStage(new MyStack(this, 'Dev'));
-    pipeline.addStage(new CoreAccountStage(this, 'Dev', {
+    pipeline.addStage(new MasterAccountStage(this, 'Master', {
       env: {
         account: '037729278610',
+        region: 'ap-northeast-2',
+      },
+    }));
+
+    pipeline.addStage(new LoggingAccountStage(this, 'Logging', {
+      env: {
+        account: '318126949465',
         region: 'ap-northeast-2',
       },
     }));

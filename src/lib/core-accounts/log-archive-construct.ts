@@ -116,7 +116,7 @@ export class LogArchiveConstruct extends cdk.Construct {
     cloudtrailBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(cloudtrailPtLambda));
 
     new config.CfnConfigurationAggregator(this, 'ConfigConfigurationAggregator', {
-      configurationAggregatorName: 'ConfigurationAggregator',
+      configurationAggregatorName: `${envVars.COMPANY_NAME}-ConfigurationAggregator`,
       accountAggregationSources: [{
         accountIds: [
           //`${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
@@ -157,7 +157,7 @@ export class LogArchiveConstruct extends cdk.Construct {
   private makePartitioningLambda(tablename: string) : lambda.Function {
 
     const myRole = new iam.Role(this, `${tablename}PartitioningLambdaExecutionRole`, {
-      roleName: `${tablename}PartitioningLambdaExecutionRole`,
+      roleName: `${envVars.COMPANY_NAME}-${tablename}PartitioningLambdaExecutionRole`,
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       path: '/',
     });
