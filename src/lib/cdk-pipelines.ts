@@ -3,7 +3,7 @@ import * as cdk from '@aws-cdk/core';
 import { SecretValue } from '@aws-cdk/core';
 import { CodePipeline, CodePipelineSource, ShellStep } from '@aws-cdk/pipelines';
 import { envVars } from './config';
-import { LoggingAccountStage } from './logging-account-stage';
+//import { LoggingAccountStage } from './logging-account-stage';
 import { MasterAccountStage } from './master-account-stage';
 //import { DynamoDbCustomLoaderStack } from './infra/ddb-custom-loader-stack';
 
