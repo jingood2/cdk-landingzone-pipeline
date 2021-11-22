@@ -92,7 +92,7 @@ export class CdkPipelinesStack extends cdk.Stack {
 
     pipeline.addStage(new LoggingAccountStage(this, 'Logging', {
       env: {
-        account: '318126949465',
+        account: '037729278610',
         region: 'ap-northeast-2',
       },
     }));
