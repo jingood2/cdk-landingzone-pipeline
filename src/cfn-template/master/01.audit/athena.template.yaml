@@ -1,7 +1,7 @@
 Parameters:
   AuditingGlueDatabaseName:
     Type: String
-    Default: auditing2
+    Default: auditing
 
 
 Resources:

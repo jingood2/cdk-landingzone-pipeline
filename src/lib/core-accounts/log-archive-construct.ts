@@ -108,7 +108,11 @@ export class LogArchiveConstruct extends cdk.Construct {
     });
 
 
-    const glueDatabase = new glue.Database(this, 'audit-database', {
+    /* const glueDatabase = new glue.Database(this, 'audit-database', {
+      databaseName: 'auditing',
+    });
+ */
+    new glue.Database(this, 'audit-database', {
       databaseName: 'auditing',
     });
 
@@ -126,6 +130,7 @@ export class LogArchiveConstruct extends cdk.Construct {
       }],
     });
 
+    /*
     const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
       templateFile: path.join(__dirname, '../..', 'cfn-template/master/01.audit/tables.template.yaml'),
     });
@@ -146,7 +151,7 @@ export class LogArchiveConstruct extends cdk.Construct {
       name: 'flowlogs',
       description: `FlowLogs table for ${flowlogsBucket.bucketName}`,
       storageDescriptor: { location: `s3://${flowlogsBucket.bucketName}/` },
-    };
+    }; */
 
 
     //this.makePartitioningLambda('FlowLogs');
