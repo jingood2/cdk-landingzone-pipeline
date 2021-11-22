@@ -119,7 +119,6 @@ export class IamGroupConstruct extends cdk.Construct {
             'iam:DeleteVirtualMFADevice',
             'iam:EnableMFADevice',
             'iam:ResyncMFADevice',
-            'iam:DeactivateMFADevice',
           ],
           Resource: [
             'arn:aws:iam::*:mfa/${aws:username}',
