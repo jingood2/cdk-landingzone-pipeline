@@ -177,7 +177,8 @@ export class IamGroupConstruct extends cdk.Construct {
       p3.effect = iam.Effect.DENY;
       p3.addAllResources();
       p3.addActions( 'sts:AssumeRole' );
-      p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
+      //p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
+      p3.addResources('*');
       p3.addCondition( 'BoolIfExists', { 'aws:MultiFactorAuthPresent': 'false' } );
       customPolicyDocument.addStatements(p3);
 

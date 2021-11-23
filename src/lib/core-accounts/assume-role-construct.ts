@@ -1,4 +1,5 @@
 import * as cdk from '@aws-cdk/core';
+//import * as iam from '@aws-cdk/aws-iam';
 
 export interface AssumeRoleConstructProps {
 
@@ -20,10 +21,12 @@ export class AssumeRoleConstruct extends cdk.Construct {
     ]; */
 
     // 1. AdminMasterGroup
-    /* const AdminMasterGroup = new iam.Group(this, 'AdminGroup', {
-      groupName: 'AdminMasterAccountGroup',
-      path: '/assume/',
-    }); */
+    /*   for (let role in ROLES ) {
+      var AdminMasterGroup = new iam.Group(this, `${role}Role`, {
+        groupName: 'AdminMasterAccountGroup',
+        path: '/assume/',
+      });
+    } */
 
   }
 }
