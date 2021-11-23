@@ -164,6 +164,7 @@ export class LogArchiveConstruct extends cdk.Construct {
       storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
     };
 
+    // CloudTrail Glue Partitioning for queiry performance
     const cloudtrail: GluePartitionInfo = {
       partitionCheckTable: 'cloudtrail',
       glueTable: 'cloudtrail',
@@ -185,6 +186,7 @@ export class LogArchiveConstruct extends cdk.Construct {
     };
 
 
+    // FlowLog Glue Partitioning for queiry performance
     /*  const flowlogs: GluePartitionInfo = {
       partitionCheckTable: 'flowlogs',
       glueTable: 'flowlogs',
