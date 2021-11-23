@@ -159,7 +159,7 @@ export class LogArchiveConstruct extends cdk.Construct {
 
     const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
     cfnFlowLogsTable.databaseName = cfnAthenaGlueDatabase.ref;
-    cfnFlowLogsTable.catalogId = envVars.MASTER.ACCOUNT_ID;
+    cfnFlowLogsTable.catalogId = envVars.LOG_ARCHIVE.ACCOUNT_ID;
     cfnFlowLogsTable.tableInput = {
       //name: 'flowlogs',
       description: `FlowLogs table for ${flowlogsBucket.bucketName}`,
