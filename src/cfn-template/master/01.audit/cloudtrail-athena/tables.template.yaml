@@ -9,8 +9,8 @@ Parameters:
 Resources:
   CloudTrailTable:
     Properties:
-      DatabaseName: !Ref AuditingGlueDatabase
-      CatalogId: !Ref AWS::AccountId
+      DatabaseName: 'AuditingGlueDatabase'
+      CatalogId: 'AccountId'
       TableInput:
         Description: !Sub 'CloudTrail table for ${CloudTrailBucket} bucket'
         Name: !Ref CloudTrailTableName
@@ -90,8 +90,8 @@ Resources:
 
   FlowLogsTable:
     Properties:
-      DatabaseName: !Ref AuditingGlueDatabase
-      CatalogId: !Ref AWS::AccountId
+      DatabaseName: 'AuditingGlueDatabase'
+      CatalogId: 'AccountId'
       TableInput:
         Description: !Sub 'CloudTrail table for ${CloudTrailBucket} bucket'
         Name: !Ref FlowLogsTableName
