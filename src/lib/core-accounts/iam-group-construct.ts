@@ -181,7 +181,7 @@ export class IamGroupConstruct extends cdk.Construct {
       'ce:GetCostAndUsage',
     );
     p2.addAllResources();
-    p2.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
+    p2.addCondition( 'boolIfExists', { 'aws:MultiFactorAuthPresent': 'false' } );
     customPolicyDocument.addStatements(p2);
     /*
 
