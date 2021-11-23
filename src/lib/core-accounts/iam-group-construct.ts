@@ -153,6 +153,7 @@ export class IamGroupConstruct extends cdk.Construct {
     const customPolicyDocument = iam.PolicyDocument.fromJson(policyDocument);
 
     if ( envVars.MASTER.REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION == 'true' ) {
+
       const p2 = new iam.PolicyStatement();
       p2.sid = 'BlockMostAccessUnlessSignedInWithMFA';
       p2.effect = iam.Effect.DENY;
@@ -170,6 +171,15 @@ export class IamGroupConstruct extends cdk.Construct {
       );
       p2.addCondition( 'BoolIfExists', { 'aws:MultiFactorAuthPresent': 'false' } );
       customPolicyDocument.addStatements(p2);
+
+      const p3 = new iam.PolicyStatement();
+      p3.sid = 'BlockSTSAssumeRoleOnMainAccountWithoutMFA';
+      p3.effect = iam.Effect.DENY;
+      p3.addAllResources();
+      p3.addActions( 'sts:AssumeRole' );
+      p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
+      p3.addCondition( 'BoolIfExists', { 'aws:MultiFactorAuthPresent': 'false' } );
+      customPolicyDocument.addStatements(p3);
 
     /*   const p2 = new iam.PolicyStatement();
       p2.sid = 'BlockMostAccessUnlessSignedInWithMFA';
