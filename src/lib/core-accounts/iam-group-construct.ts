@@ -169,7 +169,17 @@ export class IamGroupConstruct extends cdk.Construct {
     p2.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } }); */
 
     p2.effect = iam.Effect.DENY;
-    p2.addActions('*');
+    p2.addNotActions(
+      'iam:CreateVirtualMFADevice',
+      'iam:EnableMFADevice',
+      'iam:ListMFADevices',
+      'iam:ListUsers',
+      'iam:ListVirtualMFADevices',
+      'iam:ResyncMFADevice',
+      'sts:AssumeRole',
+      'iam:ListAccountAliases',
+      'ce:GetCostAndUsage',
+    );
     p2.addAllResources();
     customPolicyDocument.addStatements(p2);
     /*
