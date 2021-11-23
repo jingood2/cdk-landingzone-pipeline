@@ -128,7 +128,8 @@ export class LogArchiveConstruct extends cdk.Construct {
           //`${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
           `${envVars.SERVICE.LIST_OF_ACCOUNTS}`,
         ],
-        allAwsRegions: true,
+        awsRegions: ['ap-northeast-2'],
+        allAwsRegions: false,
       }],
     });
 
@@ -180,11 +181,9 @@ export class LogArchiveConstruct extends cdk.Construct {
     cfnFlowLogsTable.databaseName = cfnAthenaGlueDatabase.ref;
     cfnFlowLogsTable.catalogId = envVars.LOG_ARCHIVE.ACCOUNT_ID;
     cfnFlowLogsTable.tableInput = {
-      //name: 'flowlogs',
       description: `FlowLogs table for ${flowlogsBucket.bucketName}`,
       storageDescriptor: { location: `s3://${flowlogsBucket.bucketName}/` },
     };
-
 
     // FlowLog Glue Partitioning for queiry performance
     /*  const flowlogs: GluePartitionInfo = {

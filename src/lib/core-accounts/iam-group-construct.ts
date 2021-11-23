@@ -158,7 +158,7 @@ export class IamGroupConstruct extends cdk.Construct {
     });
 
     if ( envVars.MASTER.REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION == 'true' ) {
-      userCredentialsManagementPolicy.addStatements(new iam.PolicyStatement({
+      /* userCredentialsManagementPolicy.addStatements(new iam.PolicyStatement({
         sid: 'BlockMostAccessUnlessSignedInWithMFA',
         notActions: [
           'iam:CreateVirtualMFADevice',
@@ -176,7 +176,7 @@ export class IamGroupConstruct extends cdk.Construct {
         conditions: [
           { boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } },
         ],
-      }));
+      })); */
 
       userCredentialsManagementPolicy.addStatements(new iam.PolicyStatement({
         sid: 'BlockSTSAssumeRoleOnMainAccountWithoutMFA',
