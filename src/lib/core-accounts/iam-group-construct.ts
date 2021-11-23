@@ -155,6 +155,7 @@ export class IamGroupConstruct extends cdk.Construct {
     const p2 = new iam.PolicyStatement();
     p2.sid = 'BlockMostAccessUnlessSignedInWithMFA';
     p2.effect = iam.Effect.DENY;
+    p2.addAllResources();
     p2.addNotActions(
       'iam:CreateVirtualMFADevice',
       'iam:EnableMFADevice',
@@ -166,7 +167,6 @@ export class IamGroupConstruct extends cdk.Construct {
       'iam:ListAccountAliases',
       'ce:GetCostAndUsage',
     );
-    p2.addAllResources();
     p2.addCondition( 'BoolIfExists', { 'aws:MultiFactorAuthPresent': 'false' } );
     customPolicyDocument.addStatements(p2);
 
