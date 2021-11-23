@@ -152,7 +152,7 @@ export class IamGroupConstruct extends cdk.Construct {
 
     const customPolicyDocument = iam.PolicyDocument.fromJson(policyDocument);
 
-    const p2 = new iam.PolicyStatement();
+    /* const p2 = new iam.PolicyStatement();
     p2.sid = 'BlockMostAccessUnlessSignedInWithMFA';
     p2.effect = iam.Effect.DENY;
     p2.addNotActions(
@@ -179,7 +179,7 @@ export class IamGroupConstruct extends cdk.Construct {
 
     customPolicyDocument.addStatements(p2);
     customPolicyDocument.addStatements(p3);
-
+ */
     if ( envVars.MASTER.REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION == 'true' ) {
 
       /* const p2 = new iam.PolicyStatement();
