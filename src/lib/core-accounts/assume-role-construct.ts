@@ -22,7 +22,7 @@ export class AssumeRoleConstruct extends cdk.Construct {
     ];
 
     for (let Account of envVars.SERVICE_ACCOUNTS) {
-      for (let Role in ROLES ) {
+      for (let Role of ROLES ) {
 
         var group = new iam.Group(this, `${Role}Group${Account.Id}`, {
           groupName: `Assume${Role}_${Account.Name}_${Account.Id}`,
