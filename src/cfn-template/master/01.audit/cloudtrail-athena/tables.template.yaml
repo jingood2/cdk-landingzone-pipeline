@@ -9,10 +9,10 @@ Parameters:
 Resources:
   CloudTrailTable:
     Properties:
-      DatabaseName: 'AuditingGlueDatabase'
-      CatalogId: 'id'
+      DatabaseName: !Ref AuditingGlueDatabase
+      CatalogId: !Ref AWS::AccountId
       TableInput:
-        Description: 'CloudTrail table for bucket'
+        Description: !Sub 'CloudTrail table for ${CloudTrailBucket} bucket'
         Name: !Ref CloudTrailTableName
         Parameters:
           classification: 'cloudtrail'
@@ -73,7 +73,7 @@ Resources:
           - Name: vpcEndpointId
             Type: 'string'
           InputFormat: 'com.amazon.emr.cloudtrail.CloudTrailInputFormat'
-          Location: 's3://'
+          Location: !Sub 's3://${CloudTrailBucket}/'
           OutputFormat: 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
           NumberOfBuckets: -1
           SkewedInfo:
@@ -90,10 +90,10 @@ Resources:
 
   FlowLogsTable:
     Properties:
-      DatabaseName: 'AuditingGlueDatabase'
-      CatalogId: 'AccountId'
+      DatabaseName: !Ref AuditingGlueDatabase
+      CatalogId: !Ref AWS::AccountId
       TableInput:
-        Description: 'FlowLogs table for bucket'
+        Description: !Sub 'CloudTrail table for ${CloudTrailBucket} bucket'
         Name: !Ref FlowLogsTableName
         Parameters:
           'skip.header.line.count': '1'
@@ -136,7 +136,7 @@ Resources:
             - Name: logstatus
               Type: 'string'
           InputFormat: 'org.apache.hadoop.mapred.TextInputFormat'
-          Location: 's3://'
+          Location: !Sub 's3://${FlowLogsBucket}/'
           OutputFormat: 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
           NumberOfBuckets: -1
           SkewedInfo:

@@ -103,17 +103,18 @@ export class LogArchiveConstruct extends cdk.Construct {
 
 
     //const athenaQueryResultBucket = new s3.Bucket(this, 'athena-bucket', {
-    new s3.Bucket(this, 'athena-bucket', {
+    /* new s3.Bucket(this, 'athena-bucket', {
       bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-athenaqueryresult-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
     });
 
 
     const glueDatabase = new glue.Database(this, 'audit-database', {
       databaseName: 'auditing',
-    });
+    }); */
 
-    const cloudtrailPtLambda = this.makePartitioningLambda('CloudTrail');
-    cloudtrailBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(cloudtrailPtLambda));
+    //const cloudtrailPtLambda = this.makePartitioningLambda('CloudTrail');
+    this.makePartitioningLambda('CloudTrail');
+    //cloudtrailBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(cloudtrailPtLambda));
 
     new config.CfnConfigurationAggregator(this, 'ConfigConfigurationAggregator', {
       configurationAggregatorName: `${envVars.COMPANY_NAME}-ConfigurationAggregator`,
@@ -126,29 +127,44 @@ export class LogArchiveConstruct extends cdk.Construct {
       }],
     });
 
+    // 3. Audit glue table
+    /* const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
+      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/table.template.yaml'),
+    });
+
+    const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailtable') as glue.CfnTable;
+    cfnCloudTrailTable.databaseName = cfnAthenaGlueDatabase.ref;
+    cfnCloudTrailTable.catalogId = `${envVars.LOG_ARCHIVE.ACCOUNT_ID}`; */
+
+    // 2. Audit Glue Database
+    const cfnAthenaTemplate = new cfn_inc.CfnInclude(this, 'athena-template', {
+      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/athena.template.yaml'),
+    });
+
+    const cfnAthenaGlueDatabase = cfnAthenaTemplate.getResource('AuditingGlueDatabase') as glue.CfnDatabase;
+    cfnAthenaGlueDatabase.catalogId = `${envVars.LOG_ARCHIVE.ACCOUNT_ID}`;
+
     const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
       templateFile: path.join(__dirname, '../..', 'cfn-template/master/01.audit/tables.template.yaml'),
     });
 
     const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailTable') as glue.CfnTable;
-    cfnCloudTrailTable.databaseName = glueDatabase.databaseName;
+    cfnCloudTrailTable.databaseName = cfnAthenaGlueDatabase.ref;
     cfnCloudTrailTable.catalogId = envVars.LOG_ARCHIVE.ACCOUNT_ID;
     cfnCloudTrailTable.tableInput = {
-      name: 'cloudtrail',
+      //name: 'cloudtrail',
       description: `CloudTrail table for ${cloudtrailBucket.bucketName}`,
       storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
     };
 
-    /*
-
     const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
-    cfnFlowLogsTable.databaseName = glueDatabase.databaseName;
+    cfnFlowLogsTable.databaseName = cfnAthenaGlueDatabase.ref;
     cfnFlowLogsTable.catalogId = envVars.MASTER.ACCOUNT_ID;
     cfnFlowLogsTable.tableInput = {
-      name: 'flowlogs',
+      //name: 'flowlogs',
       description: `FlowLogs table for ${flowlogsBucket.bucketName}`,
       storageDescriptor: { location: `s3://${flowlogsBucket.bucketName}/` },
-    }; */
+    };
 
 
     //this.makePartitioningLambda('FlowLogs');
@@ -185,7 +201,7 @@ export class LogArchiveConstruct extends cdk.Construct {
     }));
     myRole.addToPolicy(new iam.PolicyStatement({
       sid: 'Glue',
-      actions: ['glue:GetDatabase', 'glue:CreateTable', 'glue:GetTable', 'glue:BatchCreatePartition'],
+      actions: ['glue:GetDatabase', 'glue:GetTable', 'glue:BatchCreatePartition'],
       resources: ['*'],
     }));
 
