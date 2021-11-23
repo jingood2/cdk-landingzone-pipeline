@@ -138,7 +138,7 @@ export class LogArchiveConstruct extends cdk.Construct {
 
     // 2. Audit Glue Database
     const cfnAthenaTemplate = new cfn_inc.CfnInclude(this, 'athena-template', {
-      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/athena.template.yaml'),
+      templateFile: path.join(__dirname, '../..', 'cfn-template/master/01.audit/athena.template.yaml'),
     });
 
     const cfnAthenaGlueDatabase = cfnAthenaTemplate.getResource('AuditingGlueDatabase') as glue.CfnDatabase;
