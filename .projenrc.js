@@ -20,6 +20,7 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-logs',
     '@aws-cdk/aws-s3-notifications',
     '@aws-cdk/aws-config',
+    '@aws-cdk/aws-athena',
   ], /* Which AWS CDK modules (those that start with "@aws-cdk/") this app uses. */
   context: {
     '@aws-cdk/core:newStyleStackSynthesis': true,

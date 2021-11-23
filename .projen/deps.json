@@ -93,6 +93,11 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-cdk/aws-athena",
+      "version": "^1.133.0",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-cdk/aws-codebuild",
       "version": "^1.133.0",
       "type": "runtime"

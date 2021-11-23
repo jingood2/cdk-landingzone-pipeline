@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@aws-cdk/assert": "^1.133.0",
+    "@aws-cdk/aws-athena": "^1.133.0",
     "@aws-cdk/aws-codebuild": "^1.133.0",
     "@aws-cdk/aws-codecommit": "^1.133.0",
     "@aws-cdk/aws-codedeploy": "^1.133.0",

@@ -152,53 +152,9 @@ export class IamGroupConstruct extends cdk.Construct {
 
     const customPolicyDocument = iam.PolicyDocument.fromJson(policyDocument);
 
-    const p2 = new iam.PolicyStatement();
-    /* p2.sid = 'BlockMostAccessUnlessSignedInWithMFA';
-    p2.effect = iam.Effect.DENY;
-    p2.addNotActions(
-      'iam:CreateVirtualMFADevice',
-      'iam:EnableMFADevice',
-      'iam:ListMFADevices',
-      'iam:ListUsers',
-      'iam:ListVirtualMFADevices',
-      'iam:ResyncMFADevice',
-      'sts:AssumeRole',
-      'iam:ListAccountAliases',
-      'ce:GetCostAndUsage');
-    p2.addAllResources();
-    p2.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } }); */
-
-    p2.effect = iam.Effect.DENY;
-    p2.addNotActions(
-      'iam:CreateVirtualMFADevice',
-      'iam:EnableMFADevice',
-      'iam:ListMFADevices',
-      'iam:ListUsers',
-      'iam:ListVirtualMFADevices',
-      'iam:ResyncMFADevice',
-      'sts:AssumeRole',
-      'iam:ListAccountAliases',
-      'ce:GetCostAndUsage',
-    );
-    p2.addAllResources();
-    p2.addCondition( 'BoolIfExists', { 'aws:MultiFactorAuthPresent': 'false' } );
-    customPolicyDocument.addStatements(p2);
-    /*
-
-    const p3 = new iam.PolicyStatement();
-    p3.sid = 'BlockSTSAssumeRoleOnMainAccountWithoutMFA';
-    p3.effect = iam.Effect.DENY;
-    p3.addActions( 'sts:AssumeRole' );
-    p3.addAllResources();
-    p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
-    //p3.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
-
-    customPolicyDocument.addStatements(p2);
-    customPolicyDocument.addStatements(p3);
- */
     if ( envVars.MASTER.REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION == 'true' ) {
 
-      /* const p2 = new iam.PolicyStatement();
+      const p2 = new iam.PolicyStatement();
       p2.sid = 'BlockMostAccessUnlessSignedInWithMFA';
       p2.effect = iam.Effect.DENY;
       p2.addNotActions(
@@ -212,7 +168,7 @@ export class IamGroupConstruct extends cdk.Construct {
         'iam:ListAccountAliases',
         'ce:GetCostAndUsage');
       p2.addAllResources();
-      p2.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
+      p2.addConditions({ BoolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
 
 
       const p3 = new iam.PolicyStatement();
@@ -221,11 +177,10 @@ export class IamGroupConstruct extends cdk.Construct {
       p3.addActions( 'sts:AssumeRole' );
       p3.addAllResources();
       p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
-      //p3.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
+      p3.addConditions({ BoolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
 
       customPolicyDocument.addStatements(p2);
-      customPolicyDocument.addStatements(p3); */
-
+      customPolicyDocument.addStatements(p3);
     };
 
     const userCredentialsManagementPolicy = new iam.Policy(this, 'UserCredentialsManagementPolicy', {

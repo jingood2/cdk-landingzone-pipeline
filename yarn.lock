@@ -195,9 +195,9 @@
   dependencies:
     "@aws-cdk/core" "1.133.0"
 
-"@aws-cdk/aws-athena@1.133.0":
+"@aws-cdk/aws-athena@1.133.0", "@aws-cdk/aws-athena@^1.133.0":
   version "1.133.0"
-  resolved "https://registry.npmjs.org/@aws-cdk/aws-athena/-/aws-athena-1.133.0.tgz"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-athena/-/aws-athena-1.133.0.tgz#a8c116dc30a736568088e4217569acf28425accf"
   integrity sha512-XfUbN8hie+Nj46Uk6+aSve6vFpmb2ooTMtnp4wek2fMWW+/nS11G2crP3kLkA6Gqw+LzXW9O8+SBspLD2/UkcQ==
   dependencies:
     "@aws-cdk/core" "1.133.0"

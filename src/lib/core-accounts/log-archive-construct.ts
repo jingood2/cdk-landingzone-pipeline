@@ -108,19 +108,6 @@ export class LogArchiveConstruct extends cdk.Construct {
       conditions: { StringEquals: { 's3:x-amz-acl': 'bucket-owner-full-control' } },
     }));
 
-
-    //const athenaQueryResultBucket = new s3.Bucket(this, 'athena-bucket', {
-    /* new s3.Bucket(this, 'athena-bucket', {
-      bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-athenaqueryresult-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
-    });
-
-    const glueDatabase = new glue.Database(this, 'audit-database', {
-      databaseName: 'auditing',
-    }); */
-
-    //const cloudtrailPtLambda = this.makePartitioningLambda('CloudTrail');
-    //cloudtrailBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(cloudtrailPtLambda));
-
     new config.CfnConfigurationAggregator(this, 'ConfigConfigurationAggregator', {
       configurationAggregatorName: `${envVars.COMPANY_NAME}-ConfigurationAggregator`,
       accountAggregationSources: [{
@@ -133,16 +120,6 @@ export class LogArchiveConstruct extends cdk.Construct {
       }],
     });
 
-    // 3. Audit glue table
-    /* const cfnTableTemplate = new cfn_inc.CfnInclude(this, 'table-template', {
-      templateFile: path.join(__dirname, '..', 'cfn-template/master/01.audit/table.template.yaml'),
-    });
-
-    const cfnCloudTrailTable = cfnTableTemplate.getResource('CloudTrailtable') as glue.CfnTable;
-    cfnCloudTrailTable.databaseName = cfnAthenaGlueDatabase.ref;
-    cfnCloudTrailTable.catalogId = `${envVars.LOG_ARCHIVE.ACCOUNT_ID}`; */
-
-    // 2. Audit Glue Database
     const cfnAthenaTemplate = new cfn_inc.CfnInclude(this, 'athena-template', {
       templateFile: path.join(__dirname, '../..', 'cfn-template/master/01.audit/athena.template.yaml'),
     });
@@ -186,7 +163,7 @@ export class LogArchiveConstruct extends cdk.Construct {
     };
 
     // FlowLog Glue Partitioning for queiry performance
-    /*  const flowlogs: GluePartitionInfo = {
+    const flowlogs: GluePartitionInfo = {
       partitionCheckTable: 'flowlogs',
       glueTable: 'flowlogs',
       athenaQueryResults: cfnAthenaBucket.bucketName,
@@ -195,7 +172,7 @@ export class LogArchiveConstruct extends cdk.Construct {
     };
 
     const flowlogsPtLambda = this.makePartitioningLambda('FlogLogs', flowlogs);
-    flowlogsBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(flowlogsPtLambda)); */
+    flowlogsBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(flowlogsPtLambda));
 
   }
 
