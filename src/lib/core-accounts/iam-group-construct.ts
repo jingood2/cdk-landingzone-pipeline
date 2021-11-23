@@ -167,7 +167,7 @@ export class IamGroupConstruct extends cdk.Construct {
         'iam:ListAccountAliases',
         'ce:GetCostAndUsage');
       p2.addAllResources();
-      p2.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
+      //p2.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
 
       const p3 = new iam.PolicyStatement();
       p3.sid = 'BlockSTSAssumeRoleOnMainAccountWithoutMFA';
@@ -175,8 +175,7 @@ export class IamGroupConstruct extends cdk.Construct {
       p3.addActions( 'sts:AssumeRole' );
       p3.addAllResources();
       p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
-      p3.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
-
+      //p3.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
 
       customPolicyDocument.addStatements(p2);
       customPolicyDocument.addStatements(p3);
