@@ -4,7 +4,7 @@ from time import sleep
 from datetime import datetime, timedelta
 
 TableName = os.environ['PartitionCheckTable']
-GlueTable = os.environ['CloudTrailTable']
+GlueTable = os.environ['GlueTable']
 AthenaQueryResults = os.environ['AthenaQueryResults']
 AuditingGlueDatabaseName = os.environ['AuditingGlueDatabaseName']
 

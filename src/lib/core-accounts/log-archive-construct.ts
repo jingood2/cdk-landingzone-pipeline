@@ -5,13 +5,20 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs';
 import * as s3 from '@aws-cdk/aws-s3';
-//import * as s3n from '@aws-cdk/aws-s3-notifications';
+import * as s3n from '@aws-cdk/aws-s3-notifications';
 import * as cfn_inc from '@aws-cdk/cloudformation-include';
 import * as cdk from '@aws-cdk/core';
 import { envVars } from '../config';
 
 export interface LogArchiveConstructProps extends cdk.StackProps{
 
+}
+
+export interface GluePartitionInfo {
+  partitionCheckTable: string;
+  glueTable: string;
+  athenaQueryResults: string;
+  auditingGlueDatabaseName: string;
 }
 
 export class LogArchiveConstruct extends cdk.Construct {
@@ -107,13 +114,11 @@ export class LogArchiveConstruct extends cdk.Construct {
       bucketName: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-athenaqueryresult-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
     });
 
-
     const glueDatabase = new glue.Database(this, 'audit-database', {
       databaseName: 'auditing',
     }); */
 
     //const cloudtrailPtLambda = this.makePartitioningLambda('CloudTrail');
-    this.makePartitioningLambda('CloudTrail');
     //cloudtrailBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(cloudtrailPtLambda));
 
     new config.CfnConfigurationAggregator(this, 'ConfigConfigurationAggregator', {
@@ -140,6 +145,8 @@ export class LogArchiveConstruct extends cdk.Construct {
     const cfnAthenaTemplate = new cfn_inc.CfnInclude(this, 'athena-template', {
       templateFile: path.join(__dirname, '../..', 'cfn-template/master/01.audit/athena.template.yaml'),
     });
+    const cfnAthenaBucket = cfnAthenaTemplate.getResource('AthenaQueryResults') as s3.CfnBucket;
+    cfnAthenaBucket.bucketName = `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-athenaqueryresult-${envVars.LOG_ARCHIVE.ACCOUNT_ID}`;
 
     const cfnAthenaGlueDatabase = cfnAthenaTemplate.getResource('AuditingGlueDatabase') as glue.CfnDatabase;
     cfnAthenaGlueDatabase.catalogId = `${envVars.LOG_ARCHIVE.ACCOUNT_ID}`;
@@ -157,6 +164,17 @@ export class LogArchiveConstruct extends cdk.Construct {
       storageDescriptor: { location: `s3://${cloudtrailBucket.bucketName}/` },
     };
 
+    const cloudtrail: GluePartitionInfo = {
+      partitionCheckTable: 'cloudtrail',
+      glueTable: 'cloudtrail',
+      athenaQueryResults: cfnAthenaBucket.bucketName,
+      auditingGlueDatabaseName: 'auditing',
+
+    };
+
+    const cloudtrailPtLambda = this.makePartitioningLambda('CloudTrail', cloudtrail);
+    cloudtrailBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(cloudtrailPtLambda));
+
     const cfnFlowLogsTable = cfnTableTemplate.getResource('FlowLogsTable') as glue.CfnTable;
     cfnFlowLogsTable.databaseName = cfnAthenaGlueDatabase.ref;
     cfnFlowLogsTable.catalogId = envVars.LOG_ARCHIVE.ACCOUNT_ID;
@@ -167,11 +185,20 @@ export class LogArchiveConstruct extends cdk.Construct {
     };
 
 
-    //this.makePartitioningLambda('FlowLogs');
+    /*  const flowlogs: GluePartitionInfo = {
+      partitionCheckTable: 'flowlogs',
+      glueTable: 'flowlogs',
+      athenaQueryResults: cfnAthenaBucket.bucketName,
+      auditingGlueDatabaseName: 'auditing',
+
+    };
+
+    const flowlogsPtLambda = this.makePartitioningLambda('FlogLogs', flowlogs);
+    flowlogsBucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(flowlogsPtLambda)); */
 
   }
 
-  private makePartitioningLambda(tablename: string) : lambda.Function {
+  private makePartitioningLambda(tablename: string, gluePartition:GluePartitionInfo) : lambda.Function {
 
     const myRole = new iam.Role(this, `${tablename}PartitioningLambdaExecutionRole`, {
       roleName: `${tablename}PartitioningLambdaExecutionRole`,
@@ -213,10 +240,10 @@ export class LogArchiveConstruct extends cdk.Construct {
       code: lambda.Code.fromAsset(path.join(__dirname, '../..', 'lambda-handler')),
       logRetention: logs.RetentionDays.FIVE_DAYS,
       environment: {
-        PartitionCheckTable: '',
-        CloudTrailTable: '',
-        AthenaQueryResults: '',
-        AuditingGlueDatabaseName: '',
+        PartitionCheckTable: gluePartition.partitionCheckTable,
+        GlueTable: gluePartition.glueTable,
+        AthenaQueryResults: gluePartition.athenaQueryResults,
+        AuditingGlueDatabaseName: 'auditing',
       },
       role: myRole,
     });

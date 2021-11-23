@@ -7,6 +7,8 @@ Parameters:
 Resources:
   AthenaQueryResults:
     Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: 'athenaqueryresults'
 
   AuditingGlueDatabase:
     Type: AWS::Glue::Database
