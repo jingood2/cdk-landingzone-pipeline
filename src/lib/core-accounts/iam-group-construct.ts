@@ -1,6 +1,5 @@
 import * as iam from '@aws-cdk/aws-iam';
 import * as cdk from '@aws-cdk/core';
-//import { CfnOutput } from '@aws-cdk/core';
 import { envVars } from '../config';
 
 export interface IamGroupConstructProps {
@@ -177,8 +176,7 @@ export class IamGroupConstruct extends cdk.Construct {
       p3.effect = iam.Effect.DENY;
       p3.addAllResources();
       p3.addActions( 'sts:AssumeRole' );
-      //p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
-      p3.addResources('*');
+      p3.addResources(`arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/*`);
       p3.addCondition( 'BoolIfExists', { 'aws:MultiFactorAuthPresent': 'false' } );
       customPolicyDocument.addStatements(p3);
 

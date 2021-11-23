@@ -22,8 +22,8 @@ export class AssumeRoleConstruct extends cdk.Construct {
 
     // 1. AdminMasterGroup
     /*   for (let role in ROLES ) {
-      var AdminMasterGroup = new iam.Group(this, `${role}Role`, {
-        groupName: 'AdminMasterAccountGroup',
+      var AdminMasterGroup = new iam.Group(this, `Assume${role}_${Account['Name']}_${Account['Id']}`, {
+        groupName: `Assume${role}_${Account['Name']}_${Account['Id']}`,
         path: '/assume/',
       });
     } */
