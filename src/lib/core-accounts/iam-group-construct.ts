@@ -177,7 +177,7 @@ export class IamGroupConstruct extends cdk.Construct {
       p3.addActions( 'sts:AssumeRole' );
       p3.addAllResources();
       p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
-      p2.addCondition( 'BoolIfExists', { 'aws:MultiFactorAuthPresent': 'false' });
+      p3.addCondition( 'BoolIfExists', { 'aws:MultiFactorAuthPresent': 'false' });
       //p3.addConditions({ BoolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
 
       customPolicyDocument.addStatements(p2);
