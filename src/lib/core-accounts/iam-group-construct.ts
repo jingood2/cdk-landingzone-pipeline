@@ -152,96 +152,42 @@ export class IamGroupConstruct extends cdk.Construct {
 
     const customPolicyDocument = iam.PolicyDocument.fromJson(policyDocument);
 
+    if ( envVars.MASTER.REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION == 'true' ) {
+      const p2 = new iam.PolicyStatement();
+      p2.sid = 'BlockMostAccessUnlessSignedInWithMFA';
+      p2.effect = iam.Effect.DENY;
+      p2.addNotActions(
+        'iam:CreateVirtualMFADevice',
+        'iam:EnableMFADevice',
+        'iam:ListMFADevices',
+        'iam:ListUsers',
+        'iam:ListVirtualMFADevices',
+        'iam:ResyncMFADevice',
+        'sts:AssumeRole',
+        'iam:ListAccountAliases',
+        'ce:GetCostAndUsage');
+      p2.addAllResources();
+      p2.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
+
+      const p3 = new iam.PolicyStatement();
+      p3.sid = 'BlockSTSAssumeRoleOnMainAccountWithoutMFA';
+      p3.effect = iam.Effect.DENY;
+      p3.addActions( 'sts:AssumeRole' );
+      p3.addAllResources();
+      p3.addResources('arn:aws:iam::${AWS::AccountId}:role/*');
+      p3.addConditions({ boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } });
+
+
+      customPolicyDocument.addStatements(p2);
+      customPolicyDocument.addStatements(p3);
+    };
+
     const userCredentialsManagementPolicy = new iam.Policy(this, 'UserCredentialsManagementPolicy', {
       policyName: 'UserCredentialsManagementPolicy',
       document: customPolicyDocument,
     });
 
-    if ( envVars.MASTER.REQUIRE_MFA_ON_MAIN_ACCOUNT_ACTION == 'true' ) {
-      /* userCredentialsManagementPolicy.addStatements(new iam.PolicyStatement({
-        sid: 'BlockMostAccessUnlessSignedInWithMFA',
-        notActions: [
-          'iam:CreateVirtualMFADevice',
-          'iam:EnableMFADevice',
-          'iam:ListMFADevices',
-          'iam:ListUsers',
-          'iam:ListVirtualMFADevices',
-          'iam:ResyncMFADevice',
-          'sts:AssumeRole',
-          'iam:ListAccountAliases',
-          'ce:GetCostAndUsage',
-        ],
-        resources: ['*'],
-        effect: iam.Effect.DENY,
-        conditions: [
-          { boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } },
-        ],
-      })); */
-
-      userCredentialsManagementPolicy.addStatements(new iam.PolicyStatement({
-        sid: 'BlockSTSAssumeRoleOnMainAccountWithoutMFA',
-        actions: [
-          'sts:AssumeRole',
-        ],
-        resources: [
-          'arn:aws:iam::${AWS::AccountId}:role/*',
-        ],
-        effect: iam.Effect.DENY,
-        conditions: [
-          { boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } },
-        ],
-      }));
-    };
-
     userCredentialsManagement.attachInlinePolicy(userCredentialsManagementPolicy);
-
-    /*
-    const rawPolicyA = temp.node.defaultChild as iam.PolicyStatement;
-
-    userCredentialsManagement.attachInlinePolicy(userCredentialsManagementPolicy);
-
-    const requireMFAOnMainAccountActions = new cdk.CfnParameter(this, 'RequireMFAOnMainAccountActions', {
-      type: 'String',
-      default: 'true',
-    });
-
-    const isRequireMFAOnMainAccountActions = new cdk.CfnCondition(this, 'IsRequireMFAOnMainAccountActions', {
-      expression: cdk.Fn.conditionEquals(requireMFAOnMainAccountActions, 'true'),
-    });
-
-    // Configuration value that is a different string based on IsProduction
-    const mfa = cdk.Fn.conditionIf(isRequireMFAOnMainAccountActions.logicalId, 'true', 'false').toString();
-    new CfnOutput(this, 'IsMFA', { value: mfa }); */
-
-
-    /* const policyA = new iam.Policy(this, 'PolicyA', {
-      policyName: 'PolicyA',
-      statements: [new iam.PolicyStatement({
-        sid: 'BlockMostAccessUnlessSignedInWithMFA',
-        notActions: [
-          'iam:CreateVirtualMFADevice',
-          'iam:EnableMFADevice',
-          'iam:ListMFADevices',
-          'iam:ListUsers',
-          'iam:ListVirtualMFADevices',
-          'iam:ResyncMFADevice',
-          'sts:AssumeRole',
-          'iam:ListAccountAliases',
-          'ce:GetCostAndUsage',
-        ],
-        resources: ['*'],
-        effect: iam.Effect.DENY,
-        conditions: [
-          { boolIfExists: { 'aws:MultiFactorAuthPresent': 'false' } },
-        ],
-      })],
-    });
-
-    const rawPolicyA = policyA.node.defaultChild as iam.CfnPolicy;
-
-    rawPolicyA.cfnOptions.condition = isRequireMFAOnMainAccountActions;
-
-    userCredentialsManagement.attachInlinePolicy(policyA); */
 
   }
 }
