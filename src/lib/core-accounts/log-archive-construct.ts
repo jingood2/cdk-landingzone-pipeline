@@ -5,7 +5,7 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as logs from '@aws-cdk/aws-logs';
 import * as s3 from '@aws-cdk/aws-s3';
-import * as s3n from '@aws-cdk/aws-s3-notifications';
+//import * as s3n from '@aws-cdk/aws-s3-notifications';
 import * as cfn_inc from '@aws-cdk/cloudformation-include';
 import * as cdk from '@aws-cdk/core';
 import { envVars } from '../config';
