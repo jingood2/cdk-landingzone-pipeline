@@ -19,6 +19,10 @@ export const envVars = {
   SERVICE: {
     LIST_OF_ACCOUNTS: ['037729278610'],
   },
+  SERVICE_ACCOUNTS: [
+    { Name: 'master', Id: '037729278610' },
+    { Name: 'logging', Id: '318126949465' },
+  ],
 };
 
 export function validateEnvVariables() {

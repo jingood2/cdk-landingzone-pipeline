@@ -111,14 +111,13 @@ export class LogArchiveConstruct extends cdk.Construct {
     new config.CfnConfigurationAggregator(this, 'ConfigConfigurationAggregator', {
       configurationAggregatorName: `${envVars.COMPANY_NAME}-ConfigurationAggregator`,
       accountAggregationSources: [{
-        accountIds: [
-          //`${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
-          `${envVars.SERVICE.LIST_OF_ACCOUNTS}`,
-        ],
+        accountIds: envVars.SERVICE_ACCOUNTS.map(value => { return value.Id; }),
         awsRegions: ['ap-northeast-2'],
         allAwsRegions: false,
       }],
     });
+
+    //const accounts = envVars.SERVICE_ACCOUNTS.map(value => { return value.Id; } );
 
     const cfnAthenaTemplate = new cfn_inc.CfnInclude(this, 'athena-template', {
       templateFile: path.join(__dirname, '../..', 'cfn-template/master/01.audit/athena.template.yaml'),
