@@ -21,7 +21,7 @@ export class PasswordPolicy extends cdk.Construct {
           },
         },
       ],
-      templateUrl: 's3://jingood2-stackset-template/stackset-password-policy.yaml',
+      templateUrl: 'https://jingood2-stackset-template.s3.ap-northeast-2.amazonaws.com/stackset-password-policy.yaml',
     });
   }
 }
