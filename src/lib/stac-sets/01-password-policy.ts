@@ -11,7 +11,7 @@ export class PasswordPolicy extends cdk.Construct {
 
     new cdk.CfnStackSet(this, 'password-policy', {
       stackSetName: 'the-new-password-policy',
-      permissionModel: 'SELF_MANAGED',
+      permissionModel: 'SERVICE_MANAGED',
       capabilities: ['CAPABILITY_IAM'],
       stackInstancesGroup: [
         {
