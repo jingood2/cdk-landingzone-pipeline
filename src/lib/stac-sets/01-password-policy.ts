@@ -39,7 +39,7 @@ export class PasswordPolicy extends cdk.Construct {
           },
         },
       ],
-      templateBody: convertYamlString(path.join(__dirname, '../../..', 'cfn-template/master/stack-set/01.assumable-role/assume-role.yaml')),
+      templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/stack-set/01.assumable-role/assume-role.yaml')),
     });
   }
 }
