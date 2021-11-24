@@ -23,7 +23,7 @@ Conditions:
 Resources:
   AssumableAdminRole:
     Properties:
-      MaxSessionDuration: !Ref MaxSessionDuration
+      MaxSessionDuration: 28800
       AssumeRolePolicyDocument:
         Statement:
           Effect: Allow
