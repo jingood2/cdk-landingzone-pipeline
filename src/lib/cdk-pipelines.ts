@@ -5,6 +5,7 @@ import { CodePipeline, CodePipelineSource, ShellStep } from '@aws-cdk/pipelines'
 import { envVars } from './config';
 import { LoggingAccountStage } from './logging-account-stage';
 import { MasterAccountStage } from './master-account-stage';
+import { ServiceAccountStage } from './service-account-stage';
 //import { DynamoDbCustomLoaderStack } from './infra/ddb-custom-loader-stack';
 
 export interface CodepipelineSourceProps {
@@ -93,6 +94,13 @@ export class CdkPipelinesStack extends cdk.Stack {
     pipeline.addStage(new LoggingAccountStage(this, 'Logging', {
       env: {
         account: '318126949465',
+        region: 'ap-northeast-2',
+      },
+    }));
+
+    pipeline.addStage(new ServiceAccountStage(this, 'Service', {
+      env: {
+        account: '037729278610',
         region: 'ap-northeast-2',
       },
     }));
