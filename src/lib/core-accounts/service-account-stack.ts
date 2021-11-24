@@ -9,7 +9,7 @@ export class ServiceAccountStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: ServiceAccountStackProps) {
     super(scope, id, props);
 
-    new PasswordPolicy(this, 'PasswordPolicy');
+    new PasswordPolicy(this, '01-password-policy');
 
 
   }
