@@ -10,6 +10,10 @@
       "type": "build"
     },
     {
+      "name": "@types/yamljs",
+      "type": "build"
+    },
+    {
       "name": "@typescript-eslint/eslint-plugin",
       "type": "build"
     },
@@ -183,6 +187,10 @@
     },
     {
       "name": "path",
+      "type": "runtime"
+    },
+    {
+      "name": "yamljs",
       "type": "runtime"
     }
   ],

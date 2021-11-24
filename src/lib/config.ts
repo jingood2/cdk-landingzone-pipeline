@@ -1,4 +1,5 @@
 import * as chalk from 'chalk';
+import * as YAML from 'yamljs';
 
 export const envVars = {
   REGION: process.env.REGION || 'ap-northeast-2',
@@ -33,4 +34,16 @@ export function validateEnvVariables() {
       );
     }
   }
+}
+
+export function convertYamlString(filename: string) : string {
+  var nativeObject = YAML.load(filename);
+
+  return YAML.stringify(nativeObject, 2);
+
+}
+export function yamlToJson(yamlfile: string) : string {
+  var nativeObject = YAML.load(yamlfile);
+
+  return JSON.stringify(nativeObject);
 }

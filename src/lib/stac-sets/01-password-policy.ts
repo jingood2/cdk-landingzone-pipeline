@@ -1,5 +1,6 @@
+import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
-import { envVars } from '../config';
+import { convertYamlString, envVars } from '../config';
 
 export interface PasswordPolicyProps {
 
@@ -23,6 +24,22 @@ export class PasswordPolicy extends cdk.Construct {
         },
       ],
       templateUrl: 'https://jingood2-stackset-template.s3.ap-northeast-2.amazonaws.com/stackset-password-policy.yaml',
+    });
+
+    new cdk.CfnStackSet(this, 'assumable-role', {
+      stackSetName: 'new-assumable-role',
+      permissionModel: 'SELF_MANAGED',
+      capabilities: ['CAPABILITY_NAMED_IAM'],
+      administrationRoleArn: 'arn:aws:iam::037729278610:role/AWSCloudFormationStackSetAdministrationRole',
+      stackInstancesGroup: [
+        {
+          regions: ['ap-northeast-2'],
+          deploymentTargets: {
+            accounts: envVars.SERVICE_ACCOUNTS.map(value => { return value.Id; }),
+          },
+        },
+      ],
+      templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/master/stack-set/01.assumable-role/assume-role.yaml')),
     });
   }
 }
