@@ -18,12 +18,12 @@ Parameters:
     Default: assumable-roles
 Conditions:
   HasMFAEnabled: !Equals 
-    - true
+    - 'true'
     - !Ref MFA
 Resources:
   AssumableAdminRole:
     Properties:
-      MaxSessionDuration: 28800
+      MaxSessionDuration: !Ref MaxSessionDuration
       AssumeRolePolicyDocument:
         Statement:
           Effect: Allow

@@ -17,7 +17,10 @@ export class AssumeRole extends cdk.Construct {
       administrationRoleArn: 'arn:aws:iam::037729278610:role/AWSCloudFormationStackSetAdministrationRole',
       parameters: [{
         parameterKey: 'MaxSessionDuration',
-        parameterValue: '28800',
+        parameterValue: '28000',
+      }, {
+        parameterKey: 'MFA',
+        parameterValue: 'true',
       }],
       stackInstancesGroup: [
         {
