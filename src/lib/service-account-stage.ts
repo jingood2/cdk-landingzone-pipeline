@@ -1,9 +1,5 @@
 import * as cdk from '@aws-cdk/core';
-//import { devEnv } from '../main';
-//import { LoggingAccountStack } from './core-accounts/logging-account-stack';
-import { PasswordPolicy } from './stac-sets/01-password-policy';
-//import { MasterAccountStack } from './core-accounts/master-account-stack';
-//import { MyTemplateStack } from './my-template-stack';
+import { ServiceAccountStack } from './core-accounts/service-account-stack';
 
 export interface ServiceAccountStageProps extends cdk.StageProps{
 
@@ -20,7 +16,7 @@ export class ServiceAccountStage extends cdk.Stage {
       synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
       env: devEnv,
     }); */
-    new PasswordPolicy(this, 'password-policy');
+    new ServiceAccountStack(this, 'ServiceAccountStackSet', {});
 
     /* new LoggingAccountStack(this, 'logging', {
       //synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
