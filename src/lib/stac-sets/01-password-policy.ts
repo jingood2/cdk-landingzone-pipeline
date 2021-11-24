@@ -14,7 +14,6 @@ export class PasswordPolicy extends cdk.Construct {
       permissionModel: 'SELF_MANAGED',
       stackInstancesGroup: [
         {
-          // TODOS: Apply ALL REGITION
           regions: ['ap-northeast-2'],
           deploymentTargets: {
             accounts: envVars.SERVICE_ACCOUNTS.map(value => { return value.Id; }),
