@@ -12,7 +12,7 @@ export class PasswordPolicy extends cdk.Construct {
     new cdk.CfnStackSet(this, 'password-policy', {
       stackSetName: 'the-new-password-policy',
       permissionModel: 'SELF_MANAGED',
-      capabilities: ['CAPABILITY_IAM'],
+      capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: 'arn:aws:iam::037729278610:role/AWSCloudFormationStackSetAdministrationRole',
       stackInstancesGroup: [
         {
