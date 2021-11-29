@@ -13,7 +13,7 @@ export class PasswordPolicy extends cdk.Construct {
       stackSetName: 'new-password-policy',
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
-      administrationRoleArn: 'arn:aws:iam::037729278610:role/AWSCloudFormationStackSetAdministrationRole',
+      administrationRoleArn: 'arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole',
       stackInstancesGroup: [
         {
           regions: ['ap-northeast-2'],
