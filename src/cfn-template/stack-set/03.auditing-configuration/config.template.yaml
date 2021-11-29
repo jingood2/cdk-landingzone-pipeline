@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  LoggingAccount:
+    Type: String
+    Default: ''
+  DeliveryFrequency:
+    Description: 'The frequency with which AWS Config delivers configuration snapshots'
+    Type: String
+    Default: TwentyFour_Hours
+    AllowedValues:
+    - One_Hour
+    - Three_Hours
+    - Six_Hours
+    - Twelve_Hours
+    - TwentyFour_Hours
+  ConfigBucketPrefix:
+    Type: String
+    Default: 'new-audit-storage-config'
+  GlobalConfigRegion:
+    Description: Region To use for Global AWS Config recording
+    Type: String
+    Default: ap-northeast-2
+Conditions:
+  IsGlobalRegion: !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion]
+  IsGlobalMainAccountRegion:
+    Fn::And:
+      - !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion]
+      - !Equals [!Ref 'AWS::AccountId', !Ref LoggingAccount]
+  IsLocalConfigRegion: !Not [ !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion] ]
+Resources:
+  DeliveryChannel:
+    Type: 'AWS::Config::DeliveryChannel'
+    Properties:
+      ConfigSnapshotDeliveryProperties:
+        DeliveryFrequency: !Ref DeliveryFrequency
+      S3BucketName: !Sub ${ConfigBucketPrefix}-${LoggingAccount}
+
+  ConfigurationRecorderRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      ManagedPolicyArns:
+      - 'arn:aws:iam::aws:policy/service-role/AWS_ConfigRole'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: AssumeRole1
+          Effect: Allow
+          Principal:
+            Service: 'config.amazonaws.com'
+          Action: 'sts:AssumeRole'
+
+  ConfigurationRecorderGlobal:
+    Condition: IsGlobalRegion
+    Type: 'AWS::Config::ConfigurationRecorder'
+    Properties:
+      RecordingGroup:
+        AllSupported: true
+        IncludeGlobalResourceTypes: true
+      RoleARN: !GetAtt 'ConfigurationRecorderRole.Arn'
+
+  ConfigurationRecorderLocal:
+    Condition: IsLocalConfigRegion
+    Type: 'AWS::Config::ConfigurationRecorder'
+    Properties:
+      RecordingGroup:
+        AllSupported: true
+        IncludeGlobalResourceTypes: false
+      RoleARN: !GetAtt 'ConfigurationRecorderRole.Arn'
