@@ -84,21 +84,21 @@ export class CdkPipelinesStack extends cdk.Stack {
 
     // ToDo: Add ApplicationStage
     //pipeline.addStage(new MyStack(this, 'Dev'));
-    pipeline.addStage(new MasterAccountStage(this, 'Master', {
+    pipeline.addStage(new MasterAccountStage(this, 'LZ-CORE', {
       env: {
         account: '037729278610',
         region: 'ap-northeast-2',
       },
     }));
 
-    pipeline.addStage(new LoggingAccountStage(this, 'Logging', {
+    pipeline.addStage(new LoggingAccountStage(this, 'LZ-CORE', {
       env: {
         account: '318126949465',
         region: 'ap-northeast-2',
       },
     }));
 
-    pipeline.addStage(new ServiceAccountStage(this, 'Service', {
+    pipeline.addStage(new ServiceAccountStage(this, 'LZ-SERVICE', {
       env: {
         account: '037729278610',
         region: 'ap-northeast-2',

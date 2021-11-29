@@ -20,7 +20,7 @@ export class MasterAccountStage extends cdk.Stage {
       synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
       env: devEnv,
     }); */
-    new MasterAccountStack(this, 'master', {
+    new MasterAccountStack(this, 'Master', {
       //synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
       env: { account: '037729278610', region: 'ap-northeast-2' },
     });
