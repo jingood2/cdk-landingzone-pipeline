@@ -1,6 +1,6 @@
-import * as path from 'path';
+//import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
-import { convertYamlString, envVars } from '../config';
+import { envVars } from '../config';
 
 export interface StacksetCloudtrailProps {
 
@@ -10,7 +10,7 @@ export class StacksetCloudtrail extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string ) {
     super(scope, id);
 
-    new cdk.CfnStackSet(this, 'config', {
+    new cdk.CfnStackSet(this, 'cloudtrail', {
       stackSetName: 'new-cloudtrail',
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
@@ -20,8 +20,8 @@ export class StacksetCloudtrail extends cdk.Construct {
         parameterValue: `${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
       },
       {
-        parameterKey: 'ConfigBucketPrefix',
-        parameterValue: 'new-audit-storage-config',
+        parameterKey: 'TrailBucketPrefix',
+        parameterValue: 'new-audit-cloudtrail',
       },
       {
         parameterKey: 'GlobalConfigRegion',
@@ -35,7 +35,8 @@ export class StacksetCloudtrail extends cdk.Construct {
           },
         },
       ],
-      templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/stack-set/03.auditing-configuration/config.template.yaml')),
+      //templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/stack-set/03.auditing-configuration/config.template.yaml')),
+      templateUrl: 'https://jingood2-stackset-template.s3.ap-northeast-2.amazonaws.com/cloudtrail.template.yaml',
     });
 
   }
