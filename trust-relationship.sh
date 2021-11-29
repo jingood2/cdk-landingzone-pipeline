@@ -1,3 +1,4 @@
+#export AWS_PROFILE=logging-administrator
 npx cdk bootstrap \ 
 --profile logging-administrator \ 
 --trust 037729278610 \ 

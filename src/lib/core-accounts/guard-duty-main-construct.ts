@@ -16,6 +16,9 @@ export class GuardDutyMainConstruct extends cdk.Construct {
     });
 
     envVars.SERVICE_ACCOUNTS.forEach(account => {
+      if (account.Id == `${envVars.MASTER.ACCOUNT_ID}`) {
+        return;
+      }
       var cfnMember = new guardduty.CfnMember(this, `GuardDutyMember${account.Id}`, {
         detectorId: cfnDetector.ref,
         email: account.Email,
