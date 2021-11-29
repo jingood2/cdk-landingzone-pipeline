@@ -1,0 +1,98 @@
+{
+  "Parameters": {
+      "MFA": {
+          "Type": "String",
+          "Default": "true",
+          "AllowedValues": [
+              "true",
+              "false"
+          ],
+          "Description": "Require MFA when assuming into a Role."
+      },
+      "AllowedRegions": {
+          "Type": "String",
+          "Description": "Comma separated list of Regions that can be used in your AWS Accounts."
+      },
+      "MaxSessionDuration": {
+          "Type": "Number",
+          "Default": 28800,
+          "Description": "Maximum Duration you can set when assuming a role."
+      },
+      "ExportPrefix": {
+          "Type": "String",
+          "Default": "assumable-roles"
+      }
+  },
+  "Conditions": {
+      "HasMFAEnabled": {
+          "Fn::Equals": [
+              "true", "true"
+          ]
+      }
+  },
+  "Resources": {
+      "AssumableAdminRole": {
+          "Properties": {
+              "MaxSessionDuration": 28000,
+              "AssumeRolePolicyDocument": {
+                  "Statement": {
+                      "Effect": "Allow",
+                      "Principal": {
+                          "AWS": "037729278610"
+                      },
+                      "Action": "sts:AssumeRole",
+                      "Condition": {
+                          "Fn::If": [
+                              "HasMFAEnabled",
+                              {
+                                  "Bool": {
+                                      "aws:MultiFactorAuthPresent": true
+                                  }
+                              },
+                              {
+                                  "Ref": "AWS::NoValue"
+                              }
+                          ]
+                      }
+                  }
+              },
+              "Policies": [
+                  {
+                      "PolicyName": "AdminAccess",
+                      "PolicyDocument": {
+                          "Statement": [
+                              {
+                                  "Sid": "AdminAccess",
+                                  "Effect": "Allow",
+                                  "Action": [
+                                      "*"
+                                  ],
+                                  "Resource": [
+                                      "*"
+                                  ]
+                              }
+                          ]
+                      }
+                  }
+              ],
+              "RoleName": "AssumableAdminRole"
+          },
+          "Type": "AWS::IAM::Role"
+      }
+  },
+  "Outputs": {
+      "AssumableAdminRoleArn": {
+          "Value": {
+              "Fn::GetAtt": [
+                  "AssumableAdminRole",
+                  "Arn"
+              ]
+          },
+          "Export": {
+              "Name": {
+                  "Fn::Sub": "${ExportPrefix}:AssumableAdminRoleArn"
+              }
+          }
+      }
+  }
+}

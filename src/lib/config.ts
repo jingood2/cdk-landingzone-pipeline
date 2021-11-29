@@ -24,6 +24,9 @@ export const envVars = {
     { Name: 'master', Id: '037729278610' },
     { Name: 'logging', Id: '318126949465' },
   ],
+  ALLOWED_REGIONS: ['ap-northeast-2'],
+
+  IAM_PERMISSION_BOUNDARY_LIMIT: process.env.IAM_PERMISSION_BOUNDARY_LIMIT || true,
 };
 
 export function validateEnvVariables() {
