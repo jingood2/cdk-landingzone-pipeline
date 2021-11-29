@@ -67,6 +67,34 @@ export class AssumableRoleConstruct extends cdk.Construct {
       }),
     );
 
+    const assumableDeveloperRole = new iam.Role(this, 'AssumableDeveloperRole', {
+      roleName: 'AssumableDeveloperRole',
+      //assumedBy: new iam.AccountPrincipal(`${envVars.MASTER.ACCOUNT_ID}`).withConditions(cdk.Fn.conditionIf(hasMFAEnabled.logicalId, { BoolIfExists: { 'aws:MultiFactorAuthPresent': 'true' } }, cdk.Aws.NO_VALUE)),
+      assumedBy: new iam.AccountPrincipal(`${envVars.MASTER.ACCOUNT_ID}`).withConditions({ BoolIfExists: { 'aws:MultiFactorAuthPresent': 'true' } }),
+      //externalIds: ['MASTER_ACCOUNT'],
+      description: 'this is custom AssumableDeveloperRole',
+      permissionsBoundary: boundaries.developerPermissionsBoundary,
+      maxSessionDuration: cdk.Duration.seconds(28800),
+    });
+
+    assumableDeveloperRole.addManagedPolicy({
+      managedPolicyArn: 'arn:aws:iam::aws:policy/ReadOnlyAccess',
+    });
+
+    assumableAdminRole.attachInlinePolicy(
+      new iam.Policy(this, 'CloudFormation', {
+        policyName: 'CloudFormation',
+        statements: [
+          new iam.PolicyStatement({
+            sid: 'AllowDeveloperAccess',
+            actions: ['*'],
+            resources: ['*'],
+            effect: iam.Effect.ALLOW,
+          }),
+        ],
+      }),
+    );
+
 
   }
 }
