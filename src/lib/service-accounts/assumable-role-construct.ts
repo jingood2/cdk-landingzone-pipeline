@@ -46,7 +46,8 @@ export class AssumableRoleConstruct extends cdk.Construct {
 
     const assumableAdminRole = new iam.Role(this, 'AssumableAdminRole', {
       roleName: 'AssumableAdminRole',
-      assumedBy: new iam.AccountPrincipal(`${envVars.MASTER.ACCOUNT_ID}`).withConditions(cdk.Fn.conditionIf(hasMFAEnabled.logicalId, { BoolIfExists: { 'aws:MultiFactorAuthPresent': 'true' } }, cdk.Aws.NO_VALUE)),
+      //assumedBy: new iam.AccountPrincipal(`${envVars.MASTER.ACCOUNT_ID}`).withConditions(cdk.Fn.conditionIf(hasMFAEnabled.logicalId, { BoolIfExists: { 'aws:MultiFactorAuthPresent': 'true' } }, cdk.Aws.NO_VALUE)),
+      assumedBy: new iam.AccountPrincipal(`${envVars.MASTER.ACCOUNT_ID}`),
       //externalIds: ['MASTER_ACCOUNT'],
       description: 'this is custom AssumableAdminRole',
       permissionsBoundary: boundaries.adminPermissionsBoundary,
