@@ -33,7 +33,6 @@ export class AssumeRoleConstruct extends cdk.Construct {
         var p = new iam.PolicyStatement();
         p.effect = iam.Effect.ALLOW;
         p.addActions( 'sts:AssumeRole' );
-        p.addAllResources();
         p.addResources(`arn:aws:iam::${Account.Id}:role/Assumable${Role}Role`);
         doc.addStatements(p);
 
