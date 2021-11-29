@@ -51,7 +51,7 @@ export class AssumableRoleConstruct extends cdk.Construct {
       //externalIds: ['MASTER_ACCOUNT'],
       description: 'this is custom AssumableAdminRole',
       permissionsBoundary: boundaries.adminPermissionsBoundary,
-      maxSessionDuration: cdk.Duration.seconds(28800),
+      //maxSessionDuration: 28800,
     });
 
     assumableAdminRole.attachInlinePolicy(
