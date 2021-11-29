@@ -45,7 +45,7 @@ export class AssumableRoleConstruct extends cdk.Construct {
     const boundaries = new PermissionBoundaryConstruct(this, 'PermissionBoundaryConstruct');
 
 
-    new iam.Role(this, 'AssumableAdminRole', {
+    const assumableAdminRole = new iam.Role(this, 'AssumableAdminRole', {
       roleName: 'AssumableAdminRole',
       assumedBy: new iam.AccountPrincipal(`${envVars.MASTER.ACCOUNT_ID}`).withConditions(cdk.Fn.conditionIf(hasMFAEnabled.logicalId, { BoolIfExists: { 'aws:MultiFactorAuthPresent': 'true' } }, cdk.Aws.NO_VALUE)),
       //externalIds: ['MASTER_ACCOUNT'],
@@ -53,6 +53,20 @@ export class AssumableRoleConstruct extends cdk.Construct {
       permissionsBoundary: boundaries.adminPermissionsBoundary,
       maxSessionDuration: cdk.Duration.seconds(28800),
     });
+
+    assumableAdminRole.attachInlinePolicy(
+      new iam.Policy(this, 'AdminAccess', {
+        statements: [
+          new iam.PolicyStatement({
+            sid: 'AdminAccess',
+            actions: ['*'],
+            resources: ['*'],
+            effect: iam.Effect.ALLOW,
+          }),
+        ],
+      }),
+    );
+
 
   }
 }
