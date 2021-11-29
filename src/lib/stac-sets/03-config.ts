@@ -20,6 +20,10 @@ export class StacksetConfig extends cdk.Construct {
         parameterValue: `${envVars.LOG_ARCHIVE.ACCOUNT_ID}`,
       },
       {
+        parameterKey: 'DeliveryFrequency',
+        parameterValue: 'One_Hour',
+      },
+      {
         parameterKey: 'ConfigBucketPrefix',
         parameterValue: 'new-audit-storage-config',
       },

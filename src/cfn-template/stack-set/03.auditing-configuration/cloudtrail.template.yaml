@@ -1,5 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
+  LoggingAccount:
+    Type: String
+    Default: ''
   CloudTrailLogsRetentionInDays:
     Description: 'The number of days log events are kept in CloudWatch Logs'
     Type: Number
@@ -8,6 +11,17 @@ Parameters:
   TrailBucketPrefix:
     Type: String
     Default: 'new-audit-storage-cloudtrail'
+  GlobalConfigRegion:
+    Description: Region To use for Global AWS Config recording
+    Type: String
+    Default: ap-northeast-2
+Conditions:
+  IsGlobalRegion: !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion]
+  IsGlobalMainAccountRegion:
+    Fn::And:
+      - !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion]
+      - !Equals [!Ref 'AWS::AccountId', !Ref LoggingAccount]
+  IsLocalConfigRegion: !Not [ !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion] ]
 Resources:
   TrailLogGroup:
     Condition: IsGlobalRegion
@@ -49,7 +63,7 @@ Resources:
       IncludeGlobalServiceEvents: true
       IsLogging: true
       IsMultiRegionTrail: true
-      S3BucketName: !Sub ${TrailBucketPrefix}-${MainAccount}
+      S3BucketName: !Sub ${TrailBucketPrefix}-${LoggingAccount}
       CloudWatchLogsLogGroupArn: !GetAtt 'TrailLogGroup.Arn'
       CloudWatchLogsRoleArn: !GetAtt 'TrailLogGroupRole.Arn'
       EnableLogFileValidation: true
