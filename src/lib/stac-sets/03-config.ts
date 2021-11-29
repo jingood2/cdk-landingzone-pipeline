@@ -1,6 +1,6 @@
-import * as path from 'path';
+//import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
-import { convertYamlString, envVars } from '../config';
+import { envVars } from '../config';
 
 export interface StacksetConfigProps {
 
@@ -39,7 +39,8 @@ export class StacksetConfig extends cdk.Construct {
           }],
         },
       ],
-      templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/stack-set/03.auditing-configuration/config.template.yaml')),
+      //templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/stack-set/03.auditing-configuration/config.template.yaml')),
+      templateUrl: 'https://jingood2-stackset-template.s3.ap-northeast-2.amazonaws.com/config.template.yaml',
     });
 
   }

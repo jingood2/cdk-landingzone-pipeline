@@ -24,15 +24,15 @@ Conditions:
   IsGlobalRegion: !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion]
   IsGlobalMainAccountRegion:
     Fn::And:
-      - !Equals [!Ref 'AWS::Region', 'ap-northeast-2']
-      - !Equals [!Ref 'AWS::AccountId', '318126949465']
+      - !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion]
+      - !Equals [!Ref 'AWS::AccountId', !Ref LoggingAccount]
   IsLocalConfigRegion: !Not [ !Equals [!Ref 'AWS::Region', !Ref GlobalConfigRegion] ]
 Resources:
   DeliveryChannel:
     Type: 'AWS::Config::DeliveryChannel'
     Properties:
       ConfigSnapshotDeliveryProperties:
-        DeliveryFrequency: 'One_Hour'
+        DeliveryFrequency: !Ref DeliveryFrequency
       S3BucketName: !Sub ${ConfigBucketPrefix}-${LoggingAccount}
 
   ConfigurationRecorderRole:
