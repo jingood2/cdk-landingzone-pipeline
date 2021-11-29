@@ -5,7 +5,7 @@ export interface StacksetStageProps extends cdk.StageProps{
 
 }
 
-export class StackSetStage extends cdk.Stage {
+export class StacksetStage extends cdk.Stage {
   constructor(scope: cdk.Construct, id: string, props: StacksetStageProps) {
     super(scope, id, props);
 

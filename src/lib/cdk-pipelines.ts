@@ -6,6 +6,7 @@ import { envVars } from './config';
 import { LoggingAccountStage } from './logging-account-stage';
 import { MasterAccountStage } from './master-account-stage';
 import { ServiceAccountStage } from './service-account-stage';
+import { StacksetStage } from './stackset-stage';
 //import { DynamoDbCustomLoaderStack } from './infra/ddb-custom-loader-stack';
 
 export interface CodepipelineSourceProps {
@@ -99,6 +100,13 @@ export class CdkPipelinesStack extends cdk.Stack {
     }));
 
     pipeline.addStage(new ServiceAccountStage(this, 'LZ-SVC', {
+      env: {
+        account: '037729278610',
+        region: 'ap-northeast-2',
+      },
+    }));
+
+    pipeline.addStage(new StacksetStage(this, 'LZ-STACKSET', {
       env: {
         account: '037729278610',
         region: 'ap-northeast-2',
