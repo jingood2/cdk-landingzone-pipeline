@@ -15,7 +15,7 @@ Parameters:
     - TwentyFour_Hours
   ConfigBucketPrefix:
     Type: String
-    Default: 'new-audit-storage-config'
+    Default: 'new-audit-config'
   GlobalConfigRegion:
     Description: Region To use for Global AWS Config recording
     Type: String

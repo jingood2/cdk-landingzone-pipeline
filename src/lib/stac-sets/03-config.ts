@@ -31,7 +31,7 @@ export class StacksetConfig extends cdk.Construct {
           },
           {
             parameterKey: 'ConfigBucketPrefix',
-            parameterValue: 'new-audit-storage-config',
+            parameterValue: 'new-audit-config',
           },
           {
             parameterKey: 'GlobalConfigRegion',
