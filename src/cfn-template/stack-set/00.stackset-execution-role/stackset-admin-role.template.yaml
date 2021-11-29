@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create StackSetAdministrationRole and StackSetExecutionRole on Master Account
+Resources:
+  AWSCloudFormationStackSetAdministrationRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: cloudformation.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CloudFormationRoleAdmin
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: CloudFormationStackSetAssumeRolePolicy
+                Effect: Allow
+                Action: sts:AssumeRole
+                Resource:
+                  - arn:aws:iam::*:role/AWSCloudFormationStackSetExecutionRole
+      RoleName: AWSCloudFormationStackSetAdministrationRole
+    Type: AWS::IAM::Role
+
+  AWSCloudFormationStackSetExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !GetAtt AWSCloudFormationStackSetAdministrationRole.Arn
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AWSCloudFormationStackSetAdministrationRoleAdminPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: AdminPolicy
+                Effect: Allow
+                Action: '*'
+                Resource: '*'
+      RoleName: AWSCloudFormationStackSetExecutionRole
+    Type: AWS::IAM::Role

@@ -11,9 +11,10 @@ export class LoggingAccountStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: LoggingAccountStackProps) {
     super(scope, id, props);
 
+    new StacksetExecutionRoleConstruct(this, 'StacksetExecutionRole', { stacksetRole: 'sub' });
+
     new LogArchiveConstruct(this, 'log-archive');
 
-    new StacksetExecutionRoleConstruct(this, 'StacksetExecutionRole');
     // env target account : log archive
     //new IamGroupConstruct(this, 'iam-group');
 
