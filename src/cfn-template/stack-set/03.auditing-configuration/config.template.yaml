@@ -32,7 +32,7 @@ Resources:
     Type: 'AWS::Config::DeliveryChannel'
     Properties:
       ConfigSnapshotDeliveryProperties:
-        DeliveryFrequency: !Ref DeliveryFrequency
+        DeliveryFrequency: !Sub ${DeliveryFrequency}
       S3BucketName: !Sub ${ConfigBucketPrefix}-${LoggingAccount}
 
   ConfigurationRecorderRole:
