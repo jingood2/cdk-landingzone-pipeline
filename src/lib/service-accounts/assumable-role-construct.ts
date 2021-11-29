@@ -81,7 +81,7 @@ export class AssumableRoleConstruct extends cdk.Construct {
       managedPolicyArn: 'arn:aws:iam::aws:policy/ReadOnlyAccess',
     });
 
-    assumableAdminRole.attachInlinePolicy(
+    assumableDeveloperRole.attachInlinePolicy(
       new iam.Policy(this, 'CloudFormation', {
         policyName: 'CloudFormation',
         statements: [
