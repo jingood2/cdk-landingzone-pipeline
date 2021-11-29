@@ -58,7 +58,7 @@ export class AssumableRoleConstruct extends cdk.Construct {
       new iam.Policy(this, 'AdminAccess', {
         statements: [
           new iam.PolicyStatement({
-            sid: 'AdminAccess',
+            sid: 'AdminAccess2',
             actions: ['*'],
             resources: ['*'],
             effect: iam.Effect.ALLOW,
