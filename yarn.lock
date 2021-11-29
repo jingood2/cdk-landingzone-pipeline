@@ -999,7 +999,7 @@
   dependencies:
     "@aws-cdk/core" "1.133.0"
 
-"@aws-cdk/aws-guardduty@1.133.0":
+"@aws-cdk/aws-guardduty@1.133.0", "@aws-cdk/aws-guardduty@^1.133.0":
   version "1.133.0"
   resolved "https://registry.npmjs.org/@aws-cdk/aws-guardduty/-/aws-guardduty-1.133.0.tgz"
   integrity sha512-0Rh3BBcRoRh2/jUvHNGhCfzQanhjRcUR6DxUhW64mDlWq4EbS4bMLax6iq8SYIjZ5diuZH5sBpHLMN4suUeLAA==
@@ -2976,7 +2976,7 @@
 
 "@types/yamljs@^0.2.31":
   version "0.2.31"
-  resolved "https://registry.yarnpkg.com/@types/yamljs/-/yamljs-0.2.31.tgz#b1a620b115c96db7b3bfdf0cf54aee0c57139245"
+  resolved "https://registry.npmjs.org/@types/yamljs/-/yamljs-0.2.31.tgz"
   integrity sha512-QcJ5ZczaXAqbVD3o8mw/mEBhRvO5UAdTtbvgwL/OgoWubvNBh6/MxLBAigtcgIFaq3shon9m3POIxQaLQt4fxQ==
 
 "@types/yargs-parser@*":
@@ -6278,7 +6278,7 @@ js-tokens@^4.0.0:
 
 js-yaml@3.14.0:
   version "3.14.0"
-  resolved "https://registry.npmjs.org/js-yaml/-/js-yaml-3.14.0.tgz"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.0.tgz#a7a34170f26a21bb162424d8adacb4113a69e482"
   integrity sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A==
   dependencies:
     argparse "^1.0.7"

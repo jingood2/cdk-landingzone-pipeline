@@ -21,12 +21,16 @@ export const envVars = {
     LIST_OF_ACCOUNTS: ['037729278610'],
   },
   SERVICE_ACCOUNTS: [
-    { Name: 'master', Id: '037729278610' },
-    { Name: 'logging', Id: '318126949465' },
+    { Name: 'master', Id: '037729278610', Email: 'jingood0728@naver.com' },
+    { Name: 'logging', Id: '318126949465', Email: 'jingood2+logging@gmail.com' },
+    { Name: 'sub2', Id: '856556794427', Email: 'jingood2+sub2@gmail.com' },
   ],
   ALLOWED_REGIONS: ['ap-northeast-2'],
 
   IAM_PERMISSION_BOUNDARY_LIMIT: true,
+
+  // FIFTEEN_MINUTES | ONE_HOUR | SIX_HOURS
+  GUARD_DUTY_PUBLISH_FREQUENCY: 'SIX_HOURS',
 };
 
 export function validateEnvVariables() {

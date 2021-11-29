@@ -21,6 +21,7 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-s3-notifications',
     '@aws-cdk/aws-config',
     '@aws-cdk/aws-athena',
+    '@aws-cdk/aws-guardduty',
   ], /* Which AWS CDK modules (those that start with "@aws-cdk/") this app uses. */
   context: {
     '@aws-cdk/core:newStyleStackSynthesis': true,

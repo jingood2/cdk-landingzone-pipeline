@@ -137,6 +137,11 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-cdk/aws-guardduty",
+      "version": "^1.133.0",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-cdk/aws-iam",
       "version": "^1.133.0",
       "type": "runtime"
