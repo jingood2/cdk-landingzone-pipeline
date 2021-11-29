@@ -1,0 +1,27 @@
+Parameters: 
+  MainAccount: 
+    Type: String
+    Default: ""
+    Description : "Allow MainAccount to execute StackSet Execution Role"
+Resources:
+  AWSCloudFormationStackSetExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Sub 
+                - arn:aws:iam::${MainAccount}:role/AWSCloudFormationStackSetAdministrationRole
+                - { MainAccount: !Ref MainAccount}
+          Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AWSCloudFormationStackSetExecutionRoleAdminPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: AdminPolicy
+                Effect: Allow
+                Action: '*'
+                Resource: '*'
+      RoleName: AWSCloudFormationStackSetExecutionRole
+    Type: AWS::IAM::Role
