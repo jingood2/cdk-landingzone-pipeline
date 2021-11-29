@@ -22,7 +22,7 @@ export class AssumableRoleConstruct extends cdk.Construct {
       'AwsSupportUser',
     ]; */
 
-    const MFA = new cdk.CfnParameter(this, 'MFA', {
+    /* const MFA = new cdk.CfnParameter(this, 'MFA', {
       type: 'String',
       description: 'Require MFA when assuming into a Role',
       default: 'true',
@@ -31,7 +31,7 @@ export class AssumableRoleConstruct extends cdk.Construct {
 
     const hasMFAEnabled = new cdk.CfnCondition(this, 'HasMFAEnabled', {
       expression: cdk.Fn.conditionEquals('true', MFA),
-    });
+    }); */
 
     // Restrict all actions if they are not in the AllowedRegions
     /*     const psAssumeRole = new iam.PolicyStatement();
