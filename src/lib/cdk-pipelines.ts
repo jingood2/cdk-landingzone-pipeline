@@ -91,14 +91,14 @@ export class CdkPipelinesStack extends cdk.Stack {
       },
     }));
 
-    pipeline.addStage(new LoggingAccountStage(this, 'LZ-CORE', {
+    pipeline.addStage(new LoggingAccountStage(this, 'LZ-LOGARCHIVE', {
       env: {
         account: '318126949465',
         region: 'ap-northeast-2',
       },
     }));
 
-    pipeline.addStage(new ServiceAccountStage(this, 'LZ-SERVICE', {
+    pipeline.addStage(new ServiceAccountStage(this, 'LZ-SVC', {
       env: {
         account: '037729278610',
         region: 'ap-northeast-2',

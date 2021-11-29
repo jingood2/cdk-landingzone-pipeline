@@ -16,7 +16,7 @@ export class ServiceAccountStage extends cdk.Stage {
       synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
       env: devEnv,
     }); */
-    new ServiceAccountStack(this, 'SUB1', {});
+    new ServiceAccountStack(this, 'Sub1', {});
 
     /* new LoggingAccountStack(this, 'logging', {
       //synthesizer: new cdk.DefaultStackSynthesizer({ qualifier: 'jingo12345' }),
