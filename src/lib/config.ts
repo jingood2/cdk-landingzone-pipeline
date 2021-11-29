@@ -3,8 +3,8 @@ import * as YAML from 'yamljs';
 
 export const envVars = {
   REGION: process.env.REGION || 'ap-northeast-2',
-  COMPANY_NAME: 'acme',
-  PROJECT_NAME: 'lz',
+  COMPANY_NAME: 'Acme',
+  PROJECT_NAME: 'LandingZone',
   SOURCE_PROVIDER: 'GITHUB',
   REPO: process.env.REPO_NAME || 'jingood2/cdk-landingzone-pipeline',
   BRANCH: 'main',

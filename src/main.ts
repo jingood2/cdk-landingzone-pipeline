@@ -22,7 +22,7 @@ const app = new App();
 
 //new MyStack(app, 'my-stack-dev', { env: devEnv });
 // new MyStack(app, 'my-stack-prod', { env: prodEnv });
-new CdkPipelinesStack(app, `${envVars.COMPANY_NAME}-cdk-pipeline`,
+new CdkPipelinesStack(app, `${envVars.COMPANY_NAME}-${envVars.PROJECT_NAME}-Pipeline`,
   { env: devEnv } );
 
 app.synth();
