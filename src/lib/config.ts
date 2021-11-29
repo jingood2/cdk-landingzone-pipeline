@@ -26,7 +26,7 @@ export const envVars = {
   ],
   ALLOWED_REGIONS: ['ap-northeast-2'],
 
-  IAM_PERMISSION_BOUNDARY_LIMIT: process.env.IAM_PERMISSION_BOUNDARY_LIMIT || true,
+  IAM_PERMISSION_BOUNDARY_LIMIT: true,
 };
 
 export function validateEnvVariables() {

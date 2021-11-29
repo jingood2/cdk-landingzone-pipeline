@@ -1,5 +1,5 @@
 import * as cdk from '@aws-cdk/core';
-import { ServiceAccountStack } from './core-accounts/service-account-stack';
+import { ServiceAccountStack } from './service-accounts/service-account-stack';
 
 export interface ServiceAccountStageProps extends cdk.StageProps{
 

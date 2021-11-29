@@ -35,6 +35,7 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
     // create-identities
     const psCreateOrChangeOnlyWithBoundary = new iam.PolicyStatement();
     if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT) {
+
       psCreateOrChangeOnlyWithBoundary.sid = 'CreateOrChangeOnlyWithBoundary';
       psCreateOrChangeOnlyWithBoundary.effect = iam.Effect.DENY;
       psCreateOrChangeOnlyWithBoundary.addAllResources();
@@ -147,7 +148,7 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
     const ps3 = new iam.PolicyStatement();
     ps3.sid = 'AllowIAMGetRole';
     ps3.effect = iam.Effect.ALLOW;
-    ps1.addAllResources();
+    ps3.addAllResources();
     ps3.addActions('iam:PassRole', 'iam:GetRole');
 
     pdCoreServicesDeny.addStatements(ps1, ps2, ps3, psRegionCheck);
@@ -186,6 +187,7 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
 
     pdDeveloperPermissionsBoundary.addStatements(
       psCreateOrChangeOnlyWithBoundary,
+      //psCreateOrChangeOnlyWithBoundary,
       psAllowedIAMActionsAgainstAnyResource,
       psNoBoundaryPolicyEdit,
       psNoDeleteOnAssumableRoles,
