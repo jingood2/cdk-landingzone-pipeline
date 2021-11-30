@@ -10,7 +10,7 @@ export class StacksetAssumableRole extends cdk.Construct {
     super(scope, id);
 
     new cdk.CfnStackSet(this, 'assumable-role', {
-      stackSetName: 'new-assumable-role',
+      stackSetName: 'jingood2-assumable-role',
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,

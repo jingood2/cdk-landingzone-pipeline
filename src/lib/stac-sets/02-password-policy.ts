@@ -10,7 +10,7 @@ export class StacksetPasswordPolicy extends cdk.Construct {
     super(scope, id);
 
     new cdk.CfnStackSet(this, 'password-policy', {
-      stackSetName: 'new-password-policy',
+      stackSetName: 'jingood2-password-policy',
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,

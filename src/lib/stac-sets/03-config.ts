@@ -11,7 +11,7 @@ export class StacksetConfig extends cdk.Construct {
     super(scope, id);
 
     new cdk.CfnStackSet(this, 'config', {
-      stackSetName: 'new-config',
+      stackSetName: 'jingood2-config',
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,
