@@ -31,7 +31,7 @@ export class StacksetConfig extends cdk.Construct {
           },
           {
             parameterKey: 'ConfigBucketPrefix',
-            parameterValue: 'new-audit-config',
+            parameterValue: 'jingood2-audit-config',
           },
           {
             parameterKey: 'GlobalConfigRegion',
