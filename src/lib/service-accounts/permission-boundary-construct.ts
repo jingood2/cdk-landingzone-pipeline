@@ -34,28 +34,26 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
 
     // create-identities
     var psCreateOrChangeOnlyWithBoundary = new iam.PolicyStatement();
-    if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT) {
-      psCreateOrChangeOnlyWithBoundary.sid = 'CreateOrChangeOnlyWithBoundary';
-      psCreateOrChangeOnlyWithBoundary.effect = iam.Effect.DENY;
-      psCreateOrChangeOnlyWithBoundary.addAllResources();
-      psCreateOrChangeOnlyWithBoundary.addActions(
-        'iam:CreateRole',
-        'iam:DeleteRolePolicy',
-        'iam:AttachRolePolicy',
-        'iam:DetachRolePolicy',
-        'iam:PutRolePolicy',
-        'iam:PutRolePermissionsBoundary',
-        'iam:CreateUser',
-        'iam:PutUserPolicy',
-        'iam:DeleteUserPolicy',
-        'iam:AttachUserPolicy',
-        'iam:DetachUserPolicy',
-        'iam:PutUserPermissionsBoundary',
-      );
-      psCreateOrChangeOnlyWithBoundary.addConditions({
-        StringNotEquals: { 'iam:PermissionsBoundary': `arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:policy/CreatedIdentitiesPermissionsBoundary` },
-      });
-    }
+    psCreateOrChangeOnlyWithBoundary.sid = 'CreateOrChangeOnlyWithBoundary';
+    psCreateOrChangeOnlyWithBoundary.effect = iam.Effect.DENY;
+    psCreateOrChangeOnlyWithBoundary.addAllResources();
+    psCreateOrChangeOnlyWithBoundary.addActions(
+      'iam:CreateRole',
+      'iam:DeleteRolePolicy',
+      'iam:AttachRolePolicy',
+      'iam:DetachRolePolicy',
+      'iam:PutRolePolicy',
+      'iam:PutRolePermissionsBoundary',
+      'iam:CreateUser',
+      'iam:PutUserPolicy',
+      'iam:DeleteUserPolicy',
+      'iam:AttachUserPolicy',
+      'iam:DetachUserPolicy',
+      'iam:PutUserPermissionsBoundary',
+    );
+    psCreateOrChangeOnlyWithBoundary.addConditions({
+      StringNotEquals: { 'iam:PermissionsBoundary': `arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:policy/CreatedIdentitiesPermissionsBoundary` },
+    });
 
     // Allowed IAM actions that don't support or need PermissionsBoundaries
     // Used for policy creation and updates from toolbox' service template.
@@ -167,13 +165,16 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
     ps4.addActions('*');
 
     pdAdminPermissionsBoundary.addStatements(
-      psCreateOrChangeOnlyWithBoundary ?? undefined,
       psAllowedIAMActionsAgainstAnyResource,
       psNoBoundaryPolicyEdit,
       psNoDeleteOnAssumableRoles,
       psNoBoundaryUserRoleDelete,
       psAllowUserAndRoleDelete,
       ps4);
+
+    if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT) {
+      pdAdminPermissionsBoundary.addStatements(psCreateOrChangeOnlyWithBoundary);
+    }
 
     this.adminPermissionsBoundary = new iam.ManagedPolicy(this, 'AdminPermissionsBoundary', {
       managedPolicyName: 'AdminPermissionsBoundary',
@@ -185,8 +186,6 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
     const pdDeveloperPermissionsBoundary = new iam.PolicyDocument();
 
     pdDeveloperPermissionsBoundary.addStatements(
-      psCreateOrChangeOnlyWithBoundary ?? undefined,
-      //psCreateOrChangeOnlyWithBoundary,
       psAllowedIAMActionsAgainstAnyResource,
       psNoBoundaryPolicyEdit,
       psNoDeleteOnAssumableRoles,
@@ -194,6 +193,10 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
       psAllowUserAndRoleDelete,
       psRegionCheck,
       ps4);
+
+    if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT) {
+      pdDeveloperPermissionsBoundary.addStatements(psCreateOrChangeOnlyWithBoundary);
+    }
 
     this.developerPermissionsBoundary = new iam.ManagedPolicy(this, 'DeveloperPermissionsBoundary', {
       managedPolicyName: 'DeveloperPermissionsBoundary',
