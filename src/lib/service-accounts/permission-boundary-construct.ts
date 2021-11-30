@@ -33,9 +33,8 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
     psRegionCheck.addCondition( 'ForAllValues:StringNotEquals', { 'aws:RequestedRegion': `${envVars.ALLOWED_REGIONS}` });
 
     // create-identities
-    const psCreateOrChangeOnlyWithBoundary = new iam.PolicyStatement();
+    var psCreateOrChangeOnlyWithBoundary = new iam.PolicyStatement();
     if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT) {
-
       psCreateOrChangeOnlyWithBoundary.sid = 'CreateOrChangeOnlyWithBoundary';
       psCreateOrChangeOnlyWithBoundary.effect = iam.Effect.DENY;
       psCreateOrChangeOnlyWithBoundary.addAllResources();
@@ -168,7 +167,7 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
     ps4.addActions('*');
 
     pdAdminPermissionsBoundary.addStatements(
-      psCreateOrChangeOnlyWithBoundary,
+      psCreateOrChangeOnlyWithBoundary ?? undefined,
       psAllowedIAMActionsAgainstAnyResource,
       psNoBoundaryPolicyEdit,
       psNoDeleteOnAssumableRoles,
@@ -186,7 +185,7 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
     const pdDeveloperPermissionsBoundary = new iam.PolicyDocument();
 
     pdDeveloperPermissionsBoundary.addStatements(
-      psCreateOrChangeOnlyWithBoundary,
+      psCreateOrChangeOnlyWithBoundary ?? undefined,
       //psCreateOrChangeOnlyWithBoundary,
       psAllowedIAMActionsAgainstAnyResource,
       psNoBoundaryPolicyEdit,
