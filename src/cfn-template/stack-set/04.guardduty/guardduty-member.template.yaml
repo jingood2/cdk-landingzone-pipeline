@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  MasterAccount:
+    Type: String
+    Description: 'Master Acount for trust relationship'
+Resources:
+  GuardDutyDetector:
+    Type: "AWS::GuardDuty::Detector"
+    Properties:
+      Enable: true
+
+  GuardDutyMaster:
+    DependsOn: GuardDutyDetector
+    Type: "AWS::GuardDuty::Master"
+    Properties:
+      DetectorId: !Ref GuardDutyDetector
+      MasterId: !Ref MasterAccount
