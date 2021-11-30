@@ -26,7 +26,7 @@ export class StacksetAssumableRole extends cdk.Construct {
           },
           parameterOverrides: [{
             parameterKey: 'MasterAccount',
-            parameterValue: '037729278610',
+            parameterValue: envVars.MASTER.ACCOUNT_ID,
           },
           {
             parameterKey: 'RequestedRegion',
