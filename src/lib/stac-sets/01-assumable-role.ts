@@ -14,24 +14,26 @@ export class StacksetAssumableRole extends cdk.Construct {
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,
-      /* parameters: [{
+      parameters: [{
         parameterKey: 'MasterAccount',
         parameterValue: '037729278610',
-      }], */
+      }],
       stackInstancesGroup: [
         {
           regions: ['ap-northeast-2'],
           deploymentTargets: {
             accounts: envVars.SERVICE_ACCOUNTS.map(value => { return value.Id; }),
           },
-          parameterOverrides: [{
+          parameterOverrides: [
+          /* {
             parameterKey: 'MasterAccount',
             parameterValue: envVars.MASTER.ACCOUNT_ID,
-          },
-          {
-            parameterKey: 'RequestedRegion',
-            parameterValue: envVars.REQUESTED_REGIONS,
-          }],
+          }, */
+            {
+              parameterKey: 'RequestedRegion',
+              parameterValue: envVars.REQUESTED_REGIONS,
+            },
+          ],
         },
       ],
       //templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/stack-set/01.assumable-role/assume-role.yaml')),
