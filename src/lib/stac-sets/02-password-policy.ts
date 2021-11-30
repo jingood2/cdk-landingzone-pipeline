@@ -5,7 +5,7 @@ export interface PasswordPolicyProps {
 
 }
 
-export class PasswordPolicy extends cdk.Construct {
+export class StacksetPasswordPolicy extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string ) {
     super(scope, id);
 

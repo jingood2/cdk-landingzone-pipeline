@@ -5,7 +5,7 @@ import { CodePipeline, CodePipelineSource, ShellStep } from '@aws-cdk/pipelines'
 import { envVars } from './config';
 import { LoggingAccountStage } from './logging-account-stage';
 import { MasterAccountStage } from './master-account-stage';
-import { ServiceAccountStage } from './service-account-stage';
+//import { ServiceAccountStage } from './service-account-stage';
 import { StacksetStage } from './stackset-stage';
 //import { DynamoDbCustomLoaderStack } from './infra/ddb-custom-loader-stack';
 
@@ -85,21 +85,21 @@ export class CdkPipelinesStack extends cdk.Stack {
 
     // ToDo: Add ApplicationStage
     //pipeline.addStage(new MyStack(this, 'Dev'));
-    pipeline.addStage(new MasterAccountStage(this, 'LZ-CORE', {
+    pipeline.addStage(new MasterAccountStage(this, 'LZ-MASTER', {
       env: {
-        account: '037729278610',
+        account: envVars.MASTER.ACCOUNT_ID,
         region: 'ap-northeast-2',
       },
     }));
 
     pipeline.addStage(new LoggingAccountStage(this, 'LZ-LOGARCHIVE', {
       env: {
-        account: '318126949465',
+        account: envVars.LOG_ARCHIVE.ACCOUNT_ID,
         region: 'ap-northeast-2',
       },
     }));
 
-    pipeline.addStage(new ServiceAccountStage(this, 'LZ-SVC', {
+    /* pipeline.addStage(new ServiceAccountStage(this, 'LZ-SVC', {
       env: {
         account: '037729278610',
         region: 'ap-northeast-2',
@@ -111,11 +111,11 @@ export class CdkPipelinesStack extends cdk.Stack {
         account: '856556794427',
         region: 'ap-northeast-2',
       },
-    }));
+    })); */
 
-    pipeline.addStage(new StacksetStage(this, 'LZ-STACKSET', {
+    pipeline.addStage(new StacksetStage(this, 'SERVICE', {
       env: {
-        account: '037729278610',
+        account: envVars.MASTER.ACCOUNT_ID,
         region: 'ap-northeast-2',
       },
     }));

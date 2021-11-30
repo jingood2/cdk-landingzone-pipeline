@@ -15,7 +15,7 @@ export const envVars = {
   },
   LOG_ARCHIVE: {
     ACCOUNT_ID: '318126949465',
-    BUCKET_PREFIX: 'new-audit',
+    BUCKET_PREFIX: 'jingood2-audit',
   },
   SERVICE: {
     LIST_OF_ACCOUNTS: ['037729278610'],
@@ -26,8 +26,9 @@ export const envVars = {
     { Name: 'sub2', Id: '856556794427', Email: 'jingood2+sub2@gmail.com' },
   ],
   ALLOWED_REGIONS: ['ap-northeast-2'],
+  REQUESTED_REGIONS: 'ap-northeast-2,us-east-1',
 
-  IAM_PERMISSION_BOUNDARY_LIMIT: 'false',
+  IAM_PERMISSION_BOUNDARY_LIMIT: 'true',
 
   // FIFTEEN_MINUTES | ONE_HOUR | SIX_HOURS
   GUARD_DUTY_PUBLISH_FREQUENCY: 'SIX_HOURS',
