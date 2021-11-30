@@ -14,6 +14,10 @@ export class StacksetAssumableRole extends cdk.Construct {
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,
+      parameters: [{
+        parameterKey: 'MasterAccount',
+        parameterValue: '037729278610',
+      }],
       stackInstancesGroup: [
         {
           regions: ['ap-northeast-2'],
@@ -22,7 +26,7 @@ export class StacksetAssumableRole extends cdk.Construct {
           },
           parameterOverrides: [{
             parameterKey: 'MasterAccount',
-            parameterValue: envVars.MASTER.ACCOUNT_ID,
+            parameterValue: '037729278610',
           },
           {
             parameterKey: 'RequestedRegion',
