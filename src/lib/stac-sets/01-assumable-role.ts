@@ -16,7 +16,7 @@ export class StacksetAssumableRole extends cdk.Construct {
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,
       parameters: [{
         parameterKey: 'MasterAccount',
-        parameterValue: '037729278610',
+        parameterValue: envVars.MASTER.ACCOUNT_ID,
       }],
       stackInstancesGroup: [
         {
