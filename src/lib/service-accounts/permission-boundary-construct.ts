@@ -172,7 +172,7 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
       psAllowUserAndRoleDelete,
       ps4);
 
-    if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT) {
+    if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT == true) {
       pdAdminPermissionsBoundary.addStatements(psCreateOrChangeOnlyWithBoundary);
     }
 
@@ -194,7 +194,7 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
       psRegionCheck,
       ps4);
 
-    if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT) {
+    if (envVars.IAM_PERMISSION_BOUNDARY_LIMIT == true) {
       pdDeveloperPermissionsBoundary.addStatements(psCreateOrChangeOnlyWithBoundary);
     }
 
