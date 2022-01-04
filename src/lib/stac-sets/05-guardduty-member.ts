@@ -14,10 +14,6 @@ export class StacksetGuarddutyMemberRole extends cdk.Construct {
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,
-      parameters: [{
-        parameterKey: 'MasterAccount',
-        parameterValue: envVars.MASTER.ACCOUNT_ID,
-      }],
       stackInstancesGroup: [
         {
           regions: ['ap-northeast-2'],
