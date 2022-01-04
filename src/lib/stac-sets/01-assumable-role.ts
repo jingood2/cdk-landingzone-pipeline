@@ -28,7 +28,7 @@ export class StacksetAssumableRole extends cdk.Construct {
         {
           regions: ['ap-northeast-2'],
           deploymentTargets: {
-            accounts: envVars.SERVICE_ACCOUNTS.filter(value => value.Name != 'logging').map(value => { return value.Id; }),
+            accounts: envVars.SERVICE_ACCOUNTS.map(value => { return value.Id; }),
           },
           parameterOverrides: [
           /* {
