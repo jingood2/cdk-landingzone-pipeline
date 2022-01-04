@@ -27,6 +27,7 @@ export const envVars = {
   SERVICE: {
     LIST_OF_ACCOUNTS: ['037729278610'],
   },
+  SUPPORT_ACCOUNT_ID: '037729278610',
   SERVICE_ACCOUNTS: [
     { Name: 'master', Id: '037729278610', Email: 'jingood0728@naver.com' },
     { Name: 'logging', Id: '318126949465', Email: 'jingood2+logging@gmail.com' },

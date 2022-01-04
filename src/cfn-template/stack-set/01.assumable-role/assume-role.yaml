@@ -16,6 +16,14 @@ Parameters:
   ExportPrefix:
     Type: String
     Default: assumable-roles
+  MainAccount:
+    Type: String
+    Default: '1234567890'
+    Description: trust relationship account
+  SupportAccount:
+    Type: String
+    Default: '1234567890'
+    Description: trust relationship account
 Conditions:
   HasMFAEnabled: !Equals 
     - 'true'
@@ -28,7 +36,7 @@ Resources:
         Statement:
           Effect: Allow
           Principal:
-            AWS: 037729278610
+            AWS: !Ref MainAccount 
           Action: 'sts:AssumeRole'
           Condition: !If 
             - HasMFAEnabled
@@ -47,6 +55,115 @@ Resources:
                   - '*'
       RoleName: AssumableAdminRole
     Type: 'AWS::IAM::Role'
+  AssumableReadOnlyRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Ref MainAccount 
+          Action: 'sts:AssumeRole'
+          Condition: !If 
+            - HasMFAEnabled
+            - Bool:
+                'aws:MultiFactorAuthPresent': true
+            - !Ref 'AWS::NoValue' 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+      Policies:   
+        - PolicyName: SSMSessionOperation
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Sid: SSMSessionOperation
+                Effect: Allow
+                Action:
+                  - 'ssm:*'
+                Resource:
+                  - '*'
+      RoleName: AssumableReadOnlyRole
+    Type: AWS::IAM::Role                
+  AssumableAwsPowerUserRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Ref MainAccount 
+          Action: 'sts:AssumeRole'
+          Condition: !If 
+            - HasMFAEnabled
+            - Bool:
+                'aws:MultiFactorAuthPresent': true
+            - !Ref 'AWS::NoValue' 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/PowerUserAccess
+      RoleName: AssumableAwsPowerUserRole
+    Type: AWS::IAM::Role                
+  AssumableAwsSecurityAuditRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Ref MainAccount 
+          Action: 'sts:AssumeRole'
+          Condition: !If 
+            - HasMFAEnabled
+            - Bool:
+                'aws:MultiFactorAuthPresent': true
+            - !Ref 'AWS::NoValue' 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/SecurityAudit
+      RoleName: AssumableAwsSecurityAuditRole
+    Type: AWS::IAM::Role
+  
+  AssumableDeveloperRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Ref MainAccount 
+          Action: 'sts:AssumeRole'
+          Condition: !If 
+            - HasMFAEnabled
+            - Bool:
+                'aws:MultiFactorAuthPresent': true
+            - !Ref 'AWS::NoValue' 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+      PermissionsBoundary: !Ref DeveloperPermissionsBoundary
+      Policies:
+        - PolicyName: CloudFormation
+          PolicyDocument:
+            Version: '2008-10-17'
+            Statement:
+              - Sid: AllowDeveloperAccess
+                Effect: Allow
+                Action:
+                  - '*'
+                Resource:
+                  - "*"
+      RoleName: AssumableDeveloperRole
+    Type: AWS::IAM::Role
+  AssumableAwsSupportUserRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Ref SupportAccount 
+          Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/job-function/SupportUser
+      RoleName: AssumableAwsSupportUserRole
+    Type: AWS::IAM::Role
 Outputs:
   AssumableAdminRoleArn:
     Value: !GetAtt 

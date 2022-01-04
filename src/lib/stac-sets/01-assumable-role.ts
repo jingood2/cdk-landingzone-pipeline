@@ -10,14 +10,20 @@ export class StacksetAssumableRole extends cdk.Construct {
     super(scope, id);
 
     new cdk.CfnStackSet(this, 'assumable-role', {
-      stackSetName: 'jingood2-assumable-role',
+      stackSetName: `${envVars.COMPANY_NAME}-assumable-role`,
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,
-      parameters: [{
-        parameterKey: 'MasterAccount',
-        parameterValue: envVars.MASTER.ACCOUNT_ID,
-      }],
+      parameters: [
+        {
+          parameterKey: 'MasterAccount',
+          parameterValue: envVars.MASTER.ACCOUNT_ID,
+        },
+        {
+          parameterKey: 'SupportAccount',
+          parameterValue: envVars.SUPPORT_ACCOUNT_ID,
+        },
+      ],
       stackInstancesGroup: [
         {
           regions: ['ap-northeast-2'],
@@ -37,7 +43,7 @@ export class StacksetAssumableRole extends cdk.Construct {
         },
       ],
       //templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/stack-set/01.assumable-role/assume-role.yaml')),
-      templateUrl: 'https://jingood2-stackset-template.s3.ap-northeast-2.amazonaws.com/assume-role.template.yaml',
+      templateUrl: 'https://jingood2-stackset-template.s3.ap-northeast-2.amazonaws.com/assumable-role.template.yaml',
     });
 
   }

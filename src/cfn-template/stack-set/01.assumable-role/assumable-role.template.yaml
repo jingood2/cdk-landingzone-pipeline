@@ -1,0 +1,389 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  MFA:
+    Type: String
+    Default: 'true'
+    AllowedValues: ['true', 'false' ]
+    Description: Require MFA when assuming into a Role.
+  MasterAccount:
+    Type: String
+    Description: 'Master Acount for trust relationship'
+  SupportAccount:
+    Type: String
+    Description: 'Support Acount for trust relationship'
+  MaxSessionDuration:
+    Type: Number
+    Default: 28800
+    Description: Maximum Duration you can set when assuming a role
+  RequestedRegion:
+    Type: CommaDelimitedList
+    Description: 'Request Region list'
+    Default: 'ap-northeast-2'
+  ExportPrefix:
+    Type: String
+    Default: assumable-roles
+
+Conditions:
+  HasMFAEnabled: !Equals [true, !Ref MFA]
+
+Resources:
+  CreatedIdentitiesPermissionsBoundary:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - NotAction:
+              - 'iam:*'
+              - 'cloudtrail:*'
+              - 'budgets:*'
+              - 'config:*'
+              - 'guardduty:*'
+            Effect: Allow
+            Resource: '*'
+            Sid: AllowAllServicesExcept
+          - Action: 'iam:PassRole'
+            Effect: Allow
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:iam::'
+                - !Ref MasterAccount
+                - ':role/CloudFormationRole'
+            Sid: AllowIAMPassRole
+          - Action:
+              - 'iam:PassRole'
+              - 'iam:GetRole'
+            Effect: Allow
+            Resource: '*'
+            Sid: AllowIAMGetRole
+          - NotAction:
+              - 'iam:*'
+              - 'route53:*'
+            Condition:
+              'ForAllValues:StringNotEquals':
+                'aws:RequestedRegion': !Ref RequestedRegion
+            Effect: Deny
+            Resource: '*'
+            Sid: RegionCheck
+        Version: 2012-10-17
+      Description: ''
+      ManagedPolicyName: CreatedIdentitiesPermissionsBoundary
+      Path: /
+  AdminPermissionsBoundary:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - 'iam:CreateRole'
+              - 'iam:DeleteRolePolicy'
+              - 'iam:AttachRolePolicy'
+              - 'iam:DetachRolePolicy'
+              - 'iam:PutRolePolicy'
+              - 'iam:PutRolePermissionsBoundary'
+              - 'iam:CreateUser'
+              - 'iam:PutUserPolicy'
+              - 'iam:DeleteUserPolicy'
+              - 'iam:AttachUserPolicy'
+              - 'iam:DetachUserPolicy'
+              - 'iam:PutUserPermissionsBoundary'
+            Condition:
+              StringNotEquals:
+                'iam:PermissionsBoundary': !Join 
+                  - ''
+                  - - 'arn:aws:iam::'
+                    - !Ref 'AWS::AccountId'
+                    - ':policy/CreatedIdentitiesPermissionsBoundary'
+            Effect: Deny
+            Resource: '*'
+            Sid: CreateOrChangeOnlyWithBoundary
+          - Action:
+              - 'iam:CreateServiceLinkedRole'
+              - 'iam:CreatePolicy'
+              - 'iam:DeletePolicy'
+              - 'iam:ListPolicyVersions'
+              - 'iam:CreatePolicyVersion'
+              - 'iam:DeletePolicyVersion'
+              - 'iam:ListAccessKeys'
+              - 'iam:DeleteAccessKey'
+              - 'iam:CreateAccessKey'
+              - 'iam:GetUser'
+              - 'iam:GetPolicy'
+              - 'iam:GetRole'
+              - 'iam:PassRole'
+            Effect: Allow
+            Resource: '*'
+            Sid: AllowedIAMActionsAgainstAnyResource
+          - Action:
+              - 'iam:CreatePolicyVersion'
+              - 'iam:DeletePolicy'
+              - 'iam:DeletePolicyVersion'
+              - 'iam:SetDefaultPolicyVersion'
+            Effect: Deny
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:iam::'
+                - !Ref 'AWS::AccountId'
+                - ':policy/boundaries/*'
+            Sid: NoBoundaryPolicyEdit
+          - NotAction: 'iam:GetRole'
+            Effect: Deny
+            Resource:
+              - !Join 
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref 'AWS::AccountId'
+                  - ':role/AWSCloudFormationStackSet*'
+              - !Join 
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref 'AWS::AccountId'
+                  - ':role/Assumable*'
+            Sid: NoDeleteOnAssumableRoles
+          - Action:
+              - 'iam:DeleteRolePermissionsBoundary'
+              - 'iam:DeleteUserPermissionsBoundary'
+            Effect: Deny
+            Resource: '*'
+            Sid: NoBoundaryUserRoleDelete
+          - Action:
+              - 'iam:DeleteRole'
+              - 'iam:DeleteUser'
+            Effect: Allow
+            Resource: '*'
+            Sid: AllowUserAndRoleDelete
+          - Action: '*'
+            Effect: Allow
+            Resource: '*'
+            Sid: AllowAdminAccess
+        Version: 2012-10-17
+      Description: ''
+      ManagedPolicyName: AdminPermissionsBoundary
+      Path: /
+  DeveloperPermissionsBoundary:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - 'iam:CreateRole'
+              - 'iam:DeleteRolePolicy'
+              - 'iam:AttachRolePolicy'
+              - 'iam:DetachRolePolicy'
+              - 'iam:PutRolePolicy'
+              - 'iam:PutRolePermissionsBoundary'
+              - 'iam:CreateUser'
+              - 'iam:PutUserPolicy'
+              - 'iam:DeleteUserPolicy'
+              - 'iam:AttachUserPolicy'
+              - 'iam:DetachUserPolicy'
+              - 'iam:PutUserPermissionsBoundary'
+            Condition:
+              StringNotEquals:
+                'iam:PermissionsBoundary': !Join 
+                  - ''
+                  - - 'arn:aws:iam::'
+                    - !Ref 'AWS::AccountId'
+                    - ':policy/CreatedIdentitiesPermissionsBoundary'
+            Effect: Deny
+            Resource: '*'
+            Sid: CreateOrChangeOnlyWithBoundary
+          - Action:
+              - 'iam:CreateServiceLinkedRole'
+              - 'iam:CreatePolicy'
+              - 'iam:DeletePolicy'
+              - 'iam:ListPolicyVersions'
+              - 'iam:CreatePolicyVersion'
+              - 'iam:DeletePolicyVersion'
+              - 'iam:ListAccessKeys'
+              - 'iam:DeleteAccessKey'
+              - 'iam:CreateAccessKey'
+              - 'iam:GetUser'
+              - 'iam:GetPolicy'
+              - 'iam:GetRole'
+              - 'iam:PassRole'
+            Effect: Allow
+            Resource: '*'
+            Sid: AllowedIAMActionsAgainstAnyResource
+          - Action:
+              - 'iam:CreatePolicyVersion'
+              - 'iam:DeletePolicy'
+              - 'iam:DeletePolicyVersion'
+              - 'iam:SetDefaultPolicyVersion'
+            Effect: Deny
+            Resource: !Join 
+              - ''
+              - - 'arn:aws:iam::'
+                - !Ref 'AWS::AccountId'
+                - ':policy/boundaries/*'
+            Sid: NoBoundaryPolicyEdit
+          - NotAction: 'iam:GetRole'
+            Effect: Deny
+            Resource:
+              - !Join 
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref 'AWS::AccountId'
+                  - ':role/AWSCloudFormationStackSet*'
+              - !Join 
+                - ''
+                - - 'arn:aws:iam::'
+                  - !Ref 'AWS::AccountId'
+                  - ':role/Assumable*'
+            Sid: NoDeleteOnAssumableRoles
+          - Action:
+              - 'iam:DeleteRolePermissionsBoundary'
+              - 'iam:DeleteUserPermissionsBoundary'
+            Effect: Deny
+            Resource: '*'
+            Sid: NoBoundaryUserRoleDelete
+          - Action:
+              - 'iam:DeleteRole'
+              - 'iam:DeleteUser'
+            Effect: Allow
+            Resource: '*'
+            Sid: AllowUserAndRoleDelete
+          - NotAction:
+              - 'iam:*'
+              - 'route53:*'
+            Condition:
+              'ForAllValues:StringNotEquals':
+                'aws:RequestedRegion': !Ref RequestedRegion
+            Effect: Deny
+            Resource: '*'
+            Sid: RegionCheck
+          - Action: '*'
+            Effect: Allow
+            Resource: '*'
+            Sid: AllowAdminAccess
+        Version: 2012-10-17
+      Description: ''
+      ManagedPolicyName: DeveloperPermissionsBoundary
+      Path: /
+  AssumableAdminRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: 'sts:AssumeRole'
+            Condition:
+              BoolIfExists:
+                'aws:MultiFactorAuthPresent': 'true'
+            Effect: Allow
+            Principal:
+              AWS: !Join 
+                - ''
+                - - 'arn:'
+                  - !Ref 'AWS::Partition'
+                  - ':iam::'
+                  - !Ref MasterAccount
+                  - ':root'
+        Version: 2012-10-17
+      Description: this is custom AssumableAdminRole
+      MaxSessionDuration: 28800
+      PermissionsBoundary: !Ref AdminPermissionsBoundary
+      RoleName: AssumableAdminRole
+  AssumableReadOnlyRole:
+    Properties:
+      MaxSessionDuration: !Ref MaxSessionDuration
+      #MaxSessionDuration: 28800
+      AssumeRolePolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            AWS: !Ref MasterAccount 
+          Action: 'sts:AssumeRole'
+          Condition: !If 
+            - HasMFAEnabled
+            - Bool:
+                'aws:MultiFactorAuthPresent': true
+            - !Ref 'AWS::NoValue' 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+      Policies:   
+        - PolicyName: SSMSessionOperation
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: SSMSessionOperation
+                Effect: Allow
+                Action:
+                  - 'ssm:*'
+                Resource:
+                  - '*'
+      RoleName: AssumableReadOnlyRole
+    Type: AWS::IAM::Role                
+  AdminAccess:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: '*'
+            Effect: Allow
+            Resource: '*'
+            Sid: AdminAccess
+        Version: 2012-10-17
+      PolicyName: AdminAccess
+      Roles:
+        - !Ref AssumableAdminRole
+  AssumableDeveloperRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: 'sts:AssumeRole'
+            Condition:
+              BoolIfExists:
+                'aws:MultiFactorAuthPresent': 'true'
+            Effect: Allow
+            Principal:
+              AWS: !Join 
+                - ''
+                - - 'arn:'
+                  - !Ref 'AWS::Partition'
+                  - ':iam::'
+                  - !Ref MasterAccount
+                  - ':root'
+        Version: 2012-10-17
+      Description: this is custom AssumableDeveloperRole
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/ReadOnlyAccess'
+      MaxSessionDuration: 28800
+      Policies:
+        - PolicyName: CloudFormation
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: AllowDeveloperAccess
+                Effect: Allow
+                Action:
+                  - '*'
+                Resource:
+                  - "*"
+      PermissionsBoundary: !Ref >-
+        DeveloperPermissionsBoundary
+      RoleName: AssumableDeveloperRole
+  #CloudFormation:
+  #  Type: 'AWS::IAM::Policy'
+  #  Properties:
+  #    PolicyDocument:
+  #      Statement:
+  #        - Action: '*'
+  #          Effect: Allow
+  #          Resource: '*'
+  #          Sid: AllowDeveloperAccess
+  #      Version: 2012-10-17
+  #    PolicyName: CloudFormation
+  #    Roles:
+  #      - !Ref AssumableDeveloperRole
+
+  Outputs:
+
+    AssumableAdminRoleArn:
+      Value: !GetAtt AssumableAdminRole.Arn
+      Export:
+        Name: !Sub ${ExportPrefix}:AssumableAdminRoleArn
+
+    AssumableDeveloperRoleArn:
+      Value: !GetAtt AssumableDeveloperRole.Arn
+      Export:
+        Name: !Sub ${ExportPrefix}:AssumableDeveloperRoleArn
