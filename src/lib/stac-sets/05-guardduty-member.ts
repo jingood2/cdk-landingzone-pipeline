@@ -24,6 +24,10 @@ export class StacksetGuarddutyMemberRole extends cdk.Construct {
           deploymentTargets: {
             accounts: envVars.SERVICE_ACCOUNTS.filter(value => value.Name != 'master' ).map(value => { return value.Id; }),
           },
+          parameterOverrides: [{
+            parameterKey: 'MasterAccount',
+            parameterValue: `${envVars.MASTER.ACCOUNT_ID}`,
+          }],
         },
       ],
       //templateBody: convertYamlString(path.join(__dirname, '../..', 'cfn-template/stack-set/01.assumable-role/assume-role.yaml')),
