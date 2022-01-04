@@ -375,15 +375,3 @@ Resources:
   #    PolicyName: CloudFormation
   #    Roles:
   #      - !Ref AssumableDeveloperRole
-
-  Outputs:
-
-    AssumableAdminRoleArn:
-      Value: !GetAtt AssumableAdminRole.Arn
-      Export:
-        Name: !Sub ${ExportPrefix}:AssumableAdminRoleArn
-
-    AssumableDeveloperRoleArn:
-      Value: !GetAtt AssumableDeveloperRole.Arn
-      Export:
-        Name: !Sub ${ExportPrefix}:AssumableDeveloperRoleArn
