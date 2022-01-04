@@ -11,7 +11,7 @@ export class StacksetCloudtrail extends cdk.Construct {
     super(scope, id);
 
     new cdk.CfnStackSet(this, 'cloudtrail', {
-      stackSetName: 'jingood2-cloudtrail',
+      stackSetName: `${envVars.COMPANY_NAME}-cloudtrail`,
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,

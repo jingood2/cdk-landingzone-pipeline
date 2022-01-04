@@ -10,7 +10,7 @@ export class StacksetGuarddutyMemberRole extends cdk.Construct {
     super(scope, id);
 
     new cdk.CfnStackSet(this, 'guardduty-member', {
-      stackSetName: 'jingood2-guardduty-member',
+      stackSetName: `${envVars.COMPANY_NAME}-guardduty-member`,
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,

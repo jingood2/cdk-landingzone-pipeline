@@ -38,7 +38,7 @@ export class LogArchiveConstruct extends cdk.Construct {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       serverAccessLogsBucket: logingBucket,
       serverAccessLogsPrefix: 'cloudtrail-logs',
-      versioned: true,
+      versioned: false,
     });
 
     // cloudtrail bucket policies

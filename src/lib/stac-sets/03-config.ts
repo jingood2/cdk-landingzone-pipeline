@@ -11,7 +11,7 @@ export class StacksetConfig extends cdk.Construct {
     super(scope, id);
 
     new cdk.CfnStackSet(this, 'config', {
-      stackSetName: 'jingood2-config',
+      stackSetName: `${envVars.COMPANY_NAME}-config`,
       permissionModel: 'SELF_MANAGED',
       capabilities: ['CAPABILITY_NAMED_IAM'],
       administrationRoleArn: `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:role/AWSCloudFormationStackSetAdministrationRole`,
@@ -19,7 +19,7 @@ export class StacksetConfig extends cdk.Construct {
         {
           regions: ['ap-northeast-2'],
           deploymentTargets: {
-            accounts: envVars.SERVICE_ACCOUNTS.map(value => { return value.Id; }),
+            accounts: envVars.SERVICE_ACCOUNTS.filter(value => value.Name != 'logging' ).map(value => { return value.Id; }),
           },
           parameterOverrides: [{
             parameterKey: 'LoggingAccount',
