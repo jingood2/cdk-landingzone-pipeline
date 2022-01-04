@@ -3,8 +3,8 @@ import * as YAML from 'yamljs';
 
 export const envVars = {
   REGION: process.env.REGION || 'ap-northeast-2',
-  COMPANY_NAME: 'Acme',
-  PROJECT_NAME: 'LandingZone',
+  COMPANY_NAME: 'acme',
+  PROJECT_NAME: 'landingZone',
   SOURCE_PROVIDER: 'GITHUB',
   REPO: process.env.REPO_NAME || 'jingood2/cdk-landingzone-pipeline',
   BRANCH: 'main',
@@ -15,7 +15,14 @@ export const envVars = {
   },
   LOG_ARCHIVE: {
     ACCOUNT_ID: '318126949465',
-    BUCKET_PREFIX: 'jingood2-audit',
+    BUCKET_PREFIX: 'acme-audit',
+    /*  One_Hour
+        Three_Hours
+        Six_Hours
+        Twelve_Hours
+        TwentyFour_Hours
+    */
+    DELIVERY_FREQUENCY: 'Twelve_Hours',
   },
   SERVICE: {
     LIST_OF_ACCOUNTS: ['037729278610'],

@@ -27,7 +27,7 @@ export class StacksetCloudtrail extends cdk.Construct {
           },
           {
             parameterKey: 'TrailBucketPrefix',
-            parameterValue: 'jingood2-audit-cloudtrail',
+            parameterValue: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-cloudtrail`,
           },
           {
             parameterKey: 'GlobalConfigRegion',

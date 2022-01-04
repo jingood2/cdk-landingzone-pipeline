@@ -55,6 +55,8 @@ export class LogArchiveConstruct extends cdk.Construct {
       resources: [`${cloudtrailBucket.bucketArn}/*`],
       conditions: { StringEquals: { 's3:x-amz-acl': 'bucket-owner-full-control' } },
     }));
+
+    /* ADMIN Group 사용자 외에는 CloudTrail Bucket DELETE 불가 */
     cloudtrailBucket.addToResourcePolicy(new iam.PolicyStatement({
       sid: 'DenyAuditingStorageDelete',
       effect: iam.Effect.DENY,

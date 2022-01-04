@@ -27,11 +27,11 @@ export class StacksetConfig extends cdk.Construct {
           },
           {
             parameterKey: 'DeliveryFrequency',
-            parameterValue: 'One_Hour',
+            parameterValue: `${envVars.LOG_ARCHIVE.DELIVERY_FREQUENCY}`,
           },
           {
             parameterKey: 'ConfigBucketPrefix',
-            parameterValue: 'jingood2-audit-config',
+            parameterValue: `${envVars.LOG_ARCHIVE.BUCKET_PREFIX}-config`,
           },
           {
             parameterKey: 'GlobalConfigRegion',
