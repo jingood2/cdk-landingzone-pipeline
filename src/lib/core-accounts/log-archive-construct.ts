@@ -63,7 +63,7 @@ export class LogArchiveConstruct extends cdk.Construct {
       principals: [new iam.AnyPrincipal()],
       actions: ['s3:Delete*'],
       resources: [`${cloudtrailBucket.bucketArn}/*`],
-      conditions: { ArnNotLike: { 'aws:PrincipalARN': `arn:aws:iam::${envVars.MASTER.ACCOUNT_ID}:group/admin/AdminMasterAccountGroup` } },
+      conditions: { ArnNotLike: { 'aws:PrincipalARN': `arn:aws:iam::${envVars.LOG_ARCHIVE.ACCOUNT_ID}:root` } },
     }));
 
     const flowlogsBucket = new s3.Bucket(this, 'flowlogs-bucket', {

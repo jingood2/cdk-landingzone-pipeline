@@ -113,9 +113,10 @@ export class CdkPipelinesStack extends cdk.Stack {
       },
     })); */
 
-    pipeline.addStage(new StacksetStage(this, 'SERVICE', {
+    pipeline.addStage(new StacksetStage(this, 'LZ-SVC-SUB2', {
       env: {
-        account: envVars.MASTER.ACCOUNT_ID,
+        //account: envVars.MASTER.ACCOUNT_ID,
+        account: '856556794427',
         region: 'ap-northeast-2',
       },
     }));
