@@ -146,7 +146,7 @@ export class PermissionBoundaryConstruct extends cdk.Construct {
     ps3.sid = 'AllowIAMGetRole';
     ps3.effect = iam.Effect.ALLOW;
     ps3.addAllResources();
-    ps3.addActions('iam:PassRole', 'iam:GetRole');
+    ps3.addActions('iam:PassRole', 'iam:GetRole', 'iam:CreateServiceLinkedRole');
 
     pdCoreServicesDeny.addStatements(ps1, ps2, ps3, psRegionCheck);
 
