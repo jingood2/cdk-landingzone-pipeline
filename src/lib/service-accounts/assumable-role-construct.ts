@@ -1,7 +1,7 @@
 import * as iam from '@aws-cdk/aws-iam';
 import * as cdk from '@aws-cdk/core';
-import { envVars } from '../config';
 import { PermissionBoundaryConstruct } from './permission-boundary-construct';
+import { envVars } from '../config';
 
 export interface AssumableRoleConstructProps {
 
